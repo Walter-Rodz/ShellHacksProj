@@ -27,7 +27,6 @@ export function deviceDetail(catalog: Catalog, device: CatalogDevice): DeviceDet
   return {
     ...device.card,
     summary: device.summary,
-    images: device.images,
     aliases: device.aliases,
     specTable: specTable(device),
     specs: device.specs,

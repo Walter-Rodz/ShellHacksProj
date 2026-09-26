@@ -27,22 +27,6 @@ CREATE TABLE IF NOT EXISTS devices (
   aliases            TEXT NOT NULL DEFAULT '[]'    -- JSON string[], extra search terms
 );
 
--- Uploaded photos. Files live in UPLOADS_DIR/devices/<device_id>/<file_name>; lowest sort_order is the cover.
-CREATE TABLE IF NOT EXISTS device_images (
-  id         TEXT PRIMARY KEY,
-  device_id  TEXT NOT NULL REFERENCES devices(id) ON DELETE CASCADE,
-  file_name  TEXT NOT NULL,
-  sort_order INTEGER NOT NULL,
-  created_at TEXT NOT NULL
-);
-CREATE INDEX IF NOT EXISTS device_images_device ON device_images (device_id, sort_order);
-
--- Brand logos, one per brand. File lives in UPLOADS_DIR/brands/<file_name>.
-CREATE TABLE IF NOT EXISTS brand_logos (
-  brand     TEXT PRIMARY KEY COLLATE NOCASE,
-  file_name TEXT NOT NULL
-);
-
 CREATE TABLE IF NOT EXISTS device_os (
   device_id   TEXT NOT NULL REFERENCES devices(id) ON DELETE CASCADE,
   os_id       TEXT NOT NULL,

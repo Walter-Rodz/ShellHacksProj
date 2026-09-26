@@ -16,7 +16,6 @@ import {
   type PriceSummary,
   type ScreenFit,
 } from '../types';
-import { brandLogoPath, imagePath } from './images';
 
 /*
  * The whole catalog is read from the database into memory, with prices and screen-fit already worked out,
@@ -32,7 +31,6 @@ const CACHE_TTL_MS = 30_000;
 export interface CatalogDevice {
   card: DeviceCard;
   summary: string;
-  images: { id: string; url: string }[];
   aliases: string[];
   specs: DeviceSpecs;
   os: OsOption[];
@@ -138,18 +136,6 @@ export function loadCatalog(db: Db, now = new Date()): Catalog {
     }),
   );
 
-  const imagesByDevice = groupByDevice(
-    all('SELECT * FROM device_images ORDER BY sort_order, created_at'),
-    (row) => ({
-      id: row.id as string,
-      url: imagePath(row.device_id, row.file_name),
-    }),
-  );
-
-  const logoByBrand = new Map(
-    all('SELECT * FROM brand_logos').map((row) => [row.brand.toLowerCase(), brandLogoPath(row.file_name)]),
-  );
-
   const curatedPairs = groupByDevice(all('SELECT * FROM device_pairs'), (row) => ({
     pairId: row.pair_device_id as string,
     reason: row.reason as string,
@@ -158,7 +144,6 @@ export function loadCatalog(db: Db, now = new Date()): Catalog {
   const devices = all('SELECT * FROM devices').map((row): CatalogDevice => {
     const specs = parseJson<DeviceSpecs>(row.specs, {} as DeviceSpecs);
     const aliases = parseJson<string[]>(row.aliases, []);
-    const images = imagesByDevice.get(row.id) ?? [];
     const prices = pricesByDevice.get(row.id) ?? [];
     const price = summarize(inWindow(prices, daysAgo(now, 90), isoDay(now)), prices, now);
     const screenFit = screenFitAll(specs.screen, systems);
@@ -172,10 +157,8 @@ export function loadCatalog(db: Db, now = new Date()): Catalog {
         slug: row.slug,
         name: row.name,
         brand: row.brand,
-        brandLogoUrl: logoByBrand.get(row.brand.toLowerCase()) ?? null,
         category: row.category,
         formFactor: row.form_factor,
-        imageUrl: images[0]?.url ?? null,
         releaseDate: row.release_date,
         status: row.status,
         startingPriceUsd: startingPrice(prices, row.msrp_usd, now),
@@ -185,7 +168,6 @@ export function loadCatalog(db: Db, now = new Date()): Catalog {
         popularity: row.popularity,
       },
       summary: row.summary,
-      images,
       aliases,
       specs,
       os: osByDevice.get(row.id) ?? [],

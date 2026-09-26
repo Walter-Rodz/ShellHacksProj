@@ -11,8 +11,6 @@
     "start": "tsx src/server.ts",
     "convert": "python scripts/convert_spreadsheet.py",
     "import": "tsx src/db/import.ts",
-    "images": "tsx src/db/attach-images.ts",
-    "logos": "tsx src/db/attach-logos.ts",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
     "format": "prettier --write src test"
@@ -20,13 +18,11 @@
   "dependencies": {
     "cors": "^2.8.6",
     "express": "^5.2.1",
-    "multer": "^2.4.0",
     "zod": "^4.6.5"
   },
   "devDependencies": {
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.6",
-    "@types/multer": "^2.2.0",
     "@types/node": "^22.20.4",
     "prettier": "^3.9.9",
     "tsx": "^4.23.15",

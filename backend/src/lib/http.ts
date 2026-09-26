@@ -1,11 +1,10 @@
 import type { ErrorRequestHandler, NextFunction, Request, Response } from 'express';
 import { z, ZodError } from 'zod';
 
-type ApiErrorCode = 'bad_request' | 'unauthorized' | 'not_found' | 'internal';
+type ApiErrorCode = 'bad_request' | 'not_found' | 'internal';
 
 const STATUS: Record<ApiErrorCode, number> = {
   bad_request: 400,
-  unauthorized: 401,
   not_found: 404,
   internal: 500,
 };
@@ -34,11 +33,6 @@ export const errorHandler: ErrorRequestHandler = (err, _req, res, _next) => {
     res
       .status(STATUS[err.code])
       .json({ error: { code: err.code, message: err.message, details: err.details } });
-    return;
-  }
-  // multer upload errors (file too large, too many files, wrong field name)
-  if (err?.name === 'MulterError') {
-    res.status(400).json({ error: { code: 'bad_request', message: err.message } });
     return;
   }
   // express.json() body parse errors

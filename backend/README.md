@@ -1,7 +1,8 @@
 # Retro Finder: Backend
 
 The server behind the Retro Finder website. It stores the console catalog, answers the website's searches and
-filters, works out prices and companion recommendations, and serves console photos and brand logos.
+filters, and works out prices and companion recommendations. Console photos and brand logos live in the
+frontend's `public/` folder, not here (see "Console photos" in section 3).
 
 The website (the frontend) asks this server for data at addresses like `http://localhost:4000/api/devices` and
 gets JSON back. This folder has no web pages.
@@ -42,7 +43,7 @@ npm run import -- data/consoles.json                   # data/consoles.json -> d
 ```
 
 The server picks up the changes within 30 seconds; there's no need to restart it. Consoles you delete from the
-spreadsheet are deleted from the database too, along with their prices and photos.
+spreadsheet are deleted from the database too, along with their prices.
 
 `convert` prints a list of values it had to **guess**, because the spreadsheet doesn't have them. Check that
 list. To stop a guess, add the matching column to the spreadsheet:
@@ -63,35 +64,6 @@ Two more things the converter does for you:
 - **Missing details** like stick count or triggers are left as unknown instead of made up. The one exception:
   Android and Windows devices are assumed to have Wi-Fi and Bluetooth.
 
-### Add console photos
-
-Photos are uploaded to this server and stored in the `uploads/` folder. They are files, not links.
-
-The easy way is to put all the photos in one folder, **named after the consoles**, and run:
-
-```bash
-npm run images -- "path/to/photos"             # adds photos to consoles that don't have any yet
-npm run images -- "path/to/photos" --replace   # replaces existing photos
-```
-
-- `RG35XXSP.png`, `rg35xxsp.jpg` and `Miyoo Mini +.webp` all match the right console.
-- For more than one photo, add a number: `RG35XXSP 2.png`, `RG35XXSP 3.png`. The one without a number is the
-  cover photo shown in the grid.
-- Only PNG, JPEG and WebP files up to 8 MB are accepted.
-- The command lists any files it couldn't match and which consoles still have no photo.
-
-To upload one photo at a time (for example from a future admin page), see "Photos and logos" in section 3.
-
-### Add brand logos
-
-Put the logos in one folder, **named after the brands** (`Anbernic.png`, `Miyoo.png`, `TrimUI.webp`…), and run:
-
-```bash
-npm run logos -- "path/to/logos"
-```
-
-Each logo appears on every card of that brand and in the side drawer. Running it again replaces the logos.
-
 ### Start over with a clean database
 
 Stop the server, delete `data/retro.db`, then import again:
@@ -99,9 +71,6 @@ Stop the server, delete `data/retro.db`, then import again:
 ```bash
 npm run import -- data/consoles.json
 ```
-
-The consoles lose their photos and logos too. Delete the `uploads/` folder as well, then run `npm run images` and
-`npm run logos` again.
 
 ### Run the tests
 
@@ -119,8 +88,6 @@ The tests use their own temporary database, so they never touch your data.
 | `npm start` | Start the server (no auto-restart) |
 | `npm run convert -- "<spreadsheet>"` | Turn the spreadsheet into `data/consoles.json` |
 | `npm run import -- <file.json>` | Load a JSON file into the database |
-| `npm run images -- <folder>` | Attach a folder of console photos |
-| `npm run logos -- <folder>` | Attach a folder of brand logos |
 | `npm test` | Run the tests |
 | `npm run typecheck` | Check the code for type errors |
 | `npm run format` | Tidy the code's formatting (run before committing) |
@@ -131,14 +98,13 @@ The tests use their own temporary database, so they never touch your data.
 
 ### Connecting from Next.js
 
-Forward `/api` and `/uploads` to this server in `next.config.js`, so the frontend can use short paths like
-`fetch('/api/devices')` and `<img src={device.imageUrl}>`:
+Forward `/api` to this server in `next.config.js`, so the frontend can use short paths like
+`fetch('/api/devices')`:
 
 ```js
 async rewrites() {
   return [
     { source: '/api/:path*', destination: 'http://localhost:4000/api/:path*' },
-    { source: '/uploads/:path*', destination: 'http://localhost:4000/uploads/:path*' },
   ];
 }
 ```
@@ -165,9 +131,9 @@ Each item in `items` has what a card needs:
 
 | Card shows | Field |
 |---|---|
-| Console image | `imageUrl` (`null` = no photo yet, show a placeholder) |
+| Console image | From the frontend's `public/` folder, found by `slug` (see "Console photos" below) |
 | Model name | `name` |
-| Brand tag | `brand`, plus `brandLogoUrl` if a logo was uploaded |
+| Brand tag | `brand` |
 | Form factor badge | `formFactor`: `vertical`, `horizontal` or `clamshell` |
 | Starting market price | `startingPriceUsd`: the cheapest price in the last 30 days, or the launch price if there's no recent price (`null` = unknown) |
 | What to open on click | `slug` |
@@ -206,7 +172,7 @@ The response looks like this:
 ```jsonc
 {
   "items": [ { "slug": "rg35xxsp", "name": "RG35XXSP", "brand": "Anbernic", "formFactor": "clamshell",
-               "imageUrl": "/uploads/...", "startingPriceUsd": 64, ... } ],
+               "startingPriceUsd": 64, ... } ],
   "total": 54,          // results for the current filters ("54 results")
   "page": 1, "pageSize": 24,
   "facets": {           // everything the filter controls need
@@ -230,7 +196,7 @@ Everything the drawer shows, in one request:
 
 | Drawer section | Field |
 |---|---|
-| Header and large image | `name`, `brandLogoUrl`, `images` (all photos, cover first) |
+| Header and large image | `name`, `brand`, plus the photo and logo from `public/` (see "Console photos" below) |
 | Description | `summary` |
 | Specs grid (two columns) | `specTable`: a list of `{ label, value }` rows, ready to render. Rows with unknown values are left out |
 | Price metrics widget | `price.avgUsd` ("Average Current Market Price"), `priceChart` (weekly prices for the mini chart), `deal.isGoodDeal` |
@@ -258,22 +224,19 @@ added, so show "No price data" for those.
 - Clicking a companion card: load `GET /api/devices/<companion slug>` into the drawer.
 - Hand-picked pairs (the `pairs` list in the import file) always come first.
 
-### Photos and logos (team only)
+### Console photos and brand logos
 
-These need the header `x-admin-key: <ADMIN_KEY>` (locally the key is `dev-admin-key`), so visitors can't
-change them.
+Images are part of the frontend: put them in its `public/` folder and name them after the console's `slug` and
+the brand, so the page can build the path from the data it already has. For example:
 
-| Request | Does |
-|---|---|
-| `POST /api/devices/:slug/images` | Upload console photos: form data, file(s) in a field called `image`. Add `?cover=true` to make the first one the cover |
-| `POST /api/devices/:slug/images/:imageId/cover` | Make a photo the cover |
-| `DELETE /api/devices/:slug/images/:imageId` | Delete a photo |
-| `PUT /api/brands/:brand/logo` | Upload or replace a brand's logo: form data, file in a field called `image` |
-
-Example upload from Windows PowerShell:
-```powershell
-curl.exe -X POST http://localhost:4000/api/devices/rg35xxsp/images -H "x-admin-key: dev-admin-key" -F "image=@C:\path\to\photo.png"
 ```
+public/consoles/rg35xxsp.png          ->  <img src={`/consoles/${device.slug}.png`}>
+public/consoles/retroid-pocket-5.png
+public/brands/anbernic.png            ->  <img src={`/brands/${device.brand.toLowerCase()}.png`}>
+```
+
+The full list of slugs is in `GET /api/devices?pageSize=60` (or `data/consoles.json`). Show a placeholder when a
+file is missing.
 
 ### Errors
 
@@ -286,8 +249,7 @@ When something goes wrong, the status code says what kind of problem it is, and 
 | Status | `code` | Usually means |
 |---|---|---|
 | 400 | `bad_request` | A parameter is wrong (`details` says which) |
-| 401 | `unauthorized` | Missing or wrong admin key (photo and logo uploads only) |
-| 404 | `not_found` | That console, photo or brand doesn't exist |
+| 404 | `not_found` | That console doesn't exist |
 | 500 | `internal` | A bug on the server |
 
 ---
@@ -325,13 +287,9 @@ works without one on your own computer.
 |---|---|---|
 | `PORT` | `4000` | Port the server runs on |
 | `DATABASE_PATH` | `./data/retro.db` | Where the database file is |
-| `UPLOADS_DIR` | `./uploads` | Where photos and logos are stored |
 | `CORS_ORIGINS` | `http://localhost:3000,http://localhost:5173` | Website addresses allowed to call the server directly |
-| `ADMIN_KEY` | `dev-admin-key` | Key for uploading photos and logos. **Must be set when deployed** |
 
-When deployed (`NODE_ENV=production`), the server refuses to start without `ADMIN_KEY`.
-
-The database (`data/retro.db`), `uploads/` and `.env` are not saved to git. Each person imports their own copy.
+The database (`data/retro.db`) and `.env` are not saved to git. Each person imports their own copy.
 
 ---
 
@@ -344,12 +302,11 @@ backend/
   src/
     app.ts                    list of all routes (start reading here)
     types.ts                  shape of every response (copy into the frontend)
-    routes/                   catalog.ts (public data), images.ts (photo and logo uploads)
+    routes/catalog.ts         every endpoint
     services/                 the logic: search.ts (filters, pills, sorting), deviceDetail.ts (drawer,
-                              specs table, companions), catalog.ts (loading), images.ts (photo storage)
+                              specs table, companions), catalog.ts (loading the catalog)
     lib/                      pricing math, screen-fit math, error handling
-    db/                       database tables, importer, photo and logo loaders
-    middleware/requireAdmin.ts   checks the admin key
+    db/                       database tables and the importer
   test/                       automated tests
 ```
 

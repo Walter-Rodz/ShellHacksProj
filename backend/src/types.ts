@@ -106,12 +106,8 @@ export interface DeviceCard {
   slug: string;
   name: string;
   brand: string;
-  /** Path of the brand's logo, e.g. /uploads/brands/anbernic.png; null = no logo uploaded */
-  brandLogoUrl: string | null;
   category: DeviceCategory;
   formFactor: FormFactor;
-  /** Path of the cover photo on the backend, e.g. /uploads/devices/rg35xxsp/<id>.png; null = no photo yet */
-  imageUrl: string | null;
   releaseDate: string | null;
   status: DeviceStatus;
   /**
@@ -200,8 +196,6 @@ export interface PriceHistory {
 /** Everything the side drawer shows for one device */
 export interface DeviceDetail extends DeviceCard {
   summary: string;
-  /** All uploaded photos, cover first. `id` is used to delete or re-cover a photo. */
-  images: { id: string; url: string }[];
   aliases: string[];
   /** Ready-to-render specs table: only rows with a known value, in display order */
   specTable: SpecRow[];
