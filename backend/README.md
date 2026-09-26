@@ -122,6 +122,7 @@ Copy [`src/types.ts`](src/types.ts) into the frontend. It describes the exact sh
 | Full price chart | `GET /api/devices/:slug/prices` |
 | Compare consoles side by side | `GET /api/compare?ids=rg35xxsp,miyoo-flip` (2 to 4 consoles) |
 | List of emulated systems | `GET /api/systems` |
+| AI recommendations from a user's answers | `POST /api/ai/recommend` |
 
 `:slug` is the console's short id from its card, for example `rg35xxsp` or `retroid-pocket-5`.
 
@@ -238,6 +239,25 @@ public/brands/anbernic.png            ->  <img src={`/brands/${device.brand.toLo
 The full list of slugs is in `GET /api/devices?pageSize=60` (or `data/consoles.json`). Show a placeholder when a
 file is missing.
 
+### AI recommendations: `POST /api/ai/recommend`
+
+Send what the user wants in plain words, and get the top 3 matching consoles back:
+
+```jsonc
+// Request body
+{ "answers": "clamshell under $150 that plays PS1 and GBA" }
+
+// Response
+{
+  "query": { "formFactor": ["clamshell"], "priceMax": 150, "playsWell": ["psx", "gba"], ... },  // the filters Gemini picked
+  "matches": [ { "slug": "...", "name": "...", ... } ]   // up to 3 console cards
+}
+```
+
+Gemini turns the answers into the same filters `GET /api/devices` uses, then the normal search picks the
+consoles. Without a `GEMINI_API_KEY` (or if Gemini fails) it falls back to a plain name search on the answers.
+An empty `answers` returns `400 { "error": "answers required" }`.
+
 ### Errors
 
 When something goes wrong, the status code says what kind of problem it is, and the body explains it:
@@ -288,6 +308,8 @@ works without one on your own computer.
 | `PORT` | `4000` | Port the server runs on |
 | `DATABASE_PATH` | `./data/retro.db` | Where the database file is |
 | `CORS_ORIGINS` | `http://localhost:3000,http://localhost:5173` | Website addresses allowed to call the server directly |
+| `GEMINI_API_KEY` | none | Google Gemini key for AI recommendations. Without it, the AI endpoint does a plain search |
+| `GEMINI_MODEL` | `gemini-3.8-flash` | Which Gemini model to use |
 
 The database (`data/retro.db`) and `.env` are not saved to git. Each person imports their own copy.
 
@@ -302,9 +324,10 @@ backend/
   src/
     app.ts                    list of all routes (start reading here)
     types.ts                  shape of every response (copy into the frontend)
-    routes/catalog.ts         every endpoint
+    routes/                   catalog.ts (catalog endpoints), ai.ts (AI recommendations)
     services/                 the logic: search.ts (filters, pills, sorting), deviceDetail.ts (drawer,
-                              specs table, companions), catalog.ts (loading the catalog)
+                              specs table, companions), catalog.ts (loading the catalog),
+                              ai.ts (Gemini: turns a user's answers into search filters)
     lib/                      pricing math, screen-fit math, error handling
     db/                       database tables and the importer
   test/                       automated tests

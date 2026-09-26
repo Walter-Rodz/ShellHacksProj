@@ -4,6 +4,7 @@ import { config } from './config';
 import type { Db } from './db';
 import { errorHandler, notFoundHandler } from './lib/http';
 import { catalogRoutes } from './routes/catalog';
+import { aiRoutes } from './routes/ai';
 
 export function createApp(db: Db) {
   const app = express();
@@ -17,6 +18,9 @@ export function createApp(db: Db) {
 
   // Public: systems, devices, prices, compare
   app.use('/api', catalogRoutes(db));
+
+  // AI assistant endpoints (optional)
+  app.use('/api', aiRoutes(db));
 
   app.use(notFoundHandler);
   app.use(errorHandler);
