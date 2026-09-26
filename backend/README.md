@@ -53,10 +53,15 @@ list. To stop a guess, add the matching column to the spreadsheet:
 | `Brand` | Brand name | Guessed from the model name ("RG…" → Anbernic) |
 | `Form Factor` | `vertical`, `horizontal` or `clamshell` | Guessed from the name and the "Others" column |
 | `Status` | `available`, `upcoming` or `discontinued` | `upcoming` if "Others" says rumored/concept/upcoming, otherwise `available` |
-| `Price` | List price (MSRP) in USD | No price is shown |
+| `Price` | Current market price in USD (`48`, `$48`, `$48 (+ shipping)` all work) | No price is shown |
+| `MSRP` | Original launch price in USD | Left empty |
 | `Release Date` | Release date | Left empty |
 | `Weight` | Weight in grams | Left empty |
 | `Popularity` | Any number; higher shows first in the grid | Everything is 0, so the grid is alphabetical |
+
+**Prices build a history over time.** Each import saves the `Price` column as that day's price. Update the prices
+in the sheet and import again on another day, and the price chart, trend and deal flag fill in from the history.
+Importing twice on the same day with the same prices doesn't add duplicates.
 
 Two more things the converter does for you:
 - **Emulation ratings** come from the "Games" column. "Up to PS1, NDS, PSP" means those systems and everything
@@ -136,7 +141,7 @@ Each item in `items` has what a card needs:
 | Model name | `name` |
 | Brand tag | `brand` |
 | Form factor badge | `formFactor`: `vertical`, `horizontal` or `clamshell` |
-| Starting market price | `startingPriceUsd`: the cheapest price in the last 30 days, or the launch price if there's no recent price (`null` = unknown) |
+| Starting market price | `startingPriceUsd`: the cheapest price in the last 30 days, else the latest price, else the launch price (`null` = unknown) |
 | What to open on click | `slug` |
 
 ### Searching and filtering: `GET /api/devices`
@@ -187,6 +192,10 @@ The response looks like this:
 }
 ```
 
+Values ignore upper/lower case, and systems and tiers also accept common names: `playsWell=PS1,GameCube` works
+the same as `playsWell=psx,gc`, and `tier=PS2/GC` the same as `tier=ps2_gc`. The full list of names is in
+[`src/lib/aliases.ts`](src/lib/aliases.ts).
+
 Several values in one parameter (`brand=Anbernic,Miyoo`) match consoles with **any** of them, like pills
 usually do. The counts stay useful while a pill is selected: with "Vertical" selected, `formFactor` still shows
 how many clamshells there are. The four `tier` pills are always listed, in order, even when a count is 0.
@@ -204,8 +213,8 @@ Everything the drawer shows, in one request:
 | Companion cards | `companions` (see below) |
 | Extra detail if wanted | `specs` (raw), `os` (stock and custom), `emulation` (rating per system), `screenFit` (score per system), `communityActivity` |
 
-**Missing data is `null` or left out, and means "unknown", not "no".** Prices are `null` until price data is
-added, so show "No price data" for those.
+**Missing data is `null` or left out, and means "unknown", not "no".** `price.sampleSize` says how many prices the
+average comes from (for example "based on 1 price"); with 0 prices the price fields are `null`.
 
 ### Companion recommendations: `companions`
 
@@ -276,13 +285,14 @@ When something goes wrong, the status code says what kind of problem it is, and 
 
 ## 4. How the numbers are worked out
 
-- **Starting price (cards):** the cheapest price seen in the last 30 days, or the launch price when there's no
-  recent price. The price slider and price sorting use this.
-- **Average price (drawer):** the average of all prices seen in the last 90 days. Shown only with at least 3 prices;
-  otherwise it's `null` ("not enough data").
+- **Starting price (cards):** the cheapest price seen in the last 30 days. If prices haven't been updated for
+  30 days, the most recent price; with no prices at all, the launch price. The price slider and sorting use this.
+- **Average price (drawer):** the average of all prices seen in the last 90 days, from however many there are
+  (`price.sampleSize`).
 - **Price trend:** this month's typical (median) price compared with last month's: `up`, `down`, or `flat` when
-  the change is within 3%.
-- **Good deal:** a listing from the last week that is at least 15% cheaper than the typical price over 90 days.
+  the change is within 3%. Needs at least 3 prices in each month, otherwise `unknown`.
+- **Good deal:** a listing from the last week that is at least 15% cheaper than the typical price over 90 days
+  (needs at least 3 prices in those 90 days).
 - **Price chart markers:** the release date, plus any week where the typical price moved 10% or more.
 - **Screen-fit score (0–100):** how much of the screen a system's games fill without looking blurry. Old games
   are small (a GBA is 240×160 pixels), and they look sharpest when scaled up by a whole number (2×, 3×…).

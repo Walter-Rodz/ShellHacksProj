@@ -111,8 +111,8 @@ export interface DeviceCard {
   releaseDate: string | null;
   status: DeviceStatus;
   /**
-   * "From $X" price for the card: the lowest price seen in the last 30 days, or the MSRP when there's no recent
-   * price. null = no price known. Price filters and sorting use this number.
+   * "From $X" price for the card: the lowest price seen in the last 30 days, else the most recent price, else the
+   * MSRP. null = no price known. Price filters and sorting use this number.
    */
   startingPriceUsd: number | null;
   msrpUsd: number | null;
@@ -154,6 +154,7 @@ export interface PricePoint {
   url?: string;
 }
 
+/** Stats over a set of prices. avg/median/low/high are null only when there are no prices (sampleSize 0). */
 export interface PriceSummary {
   avgUsd: number | null;
   medianUsd: number | null;

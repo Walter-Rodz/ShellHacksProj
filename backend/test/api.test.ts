@@ -246,6 +246,26 @@ describe('catalog', () => {
     ]);
   });
 
+  it('accepts common system names and any letter case', async () => {
+    const byId = slugs((await get('/devices?playsWell=psx,gc&sort=name')).body.items);
+    expect(byId).toEqual(['beast-169', 'box']);
+    // The names people (and the AI) use mean the same thing
+    expect(slugs((await get('/devices?playsWell=PS1,GameCube&sort=name')).body.items)).toEqual(byId);
+    expect(
+      slugs((await get('/devices?playsWell=PlayStation,Nintendo%20GameCube&sort=name')).body.items),
+    ).toEqual(byId);
+    expect(slugs((await get('/devices?tier=PS2/GC&sort=name')).body.items)).toEqual(byId);
+    expect(slugs((await get('/devices?tier=gamecube&sort=name')).body.items)).toEqual(byId);
+    expect(slugs((await get('/devices?formFactor=Clamshell&status=AVAILABLE')).body.items)).toEqual([
+      'clam-32',
+    ]);
+    expect(slugs((await get('/devices?fitFor=Game%20Boy%20Advance&fitMin=Perfect')).body.items)).toEqual([
+      'clam-32',
+    ]);
+    // Unknown values are still rejected
+    expect((await get('/devices?tier=gamecube2')).status).toBe(400);
+  });
+
   it('filters by emulation tier, and always lists all four tiers', async () => {
     const { body } = await get('/devices?tier=ps2_gc');
     expect(slugs(body.items).sort()).toEqual(['beast-169', 'box']);
@@ -352,7 +372,7 @@ describe('catalog', () => {
     expect(year.weekly.length).toBeGreaterThan(0);
     const used = (await get('/devices/pocket-43/prices?range=90d&condition=used')).body;
     expect(used.points).toHaveLength(1);
-    expect(used.summary.avgUsd).toBeNull();
+    expect(used.summary).toMatchObject({ avgUsd: 45, sampleSize: 1 });
   });
 
   it('compares devices', async () => {

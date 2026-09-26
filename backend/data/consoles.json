@@ -8241,6 +8241,378 @@
       ]
     }
   ],
-  "pricePoints": [],
+  "pricePoints": [
+    {
+      "deviceId": "rg28xx",
+      "observedAt": "2026-09-26",
+      "priceUsd": 48.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "batlexp-g350",
+      "observedAt": "2026-09-26",
+      "priceUsd": 40.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "r36s",
+      "observedAt": "2026-09-26",
+      "priceUsd": 40.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "miyoo-flip",
+      "observedAt": "2026-09-26",
+      "priceUsd": 50.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "r36h",
+      "observedAt": "2026-09-26",
+      "priceUsd": 50.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg35xxsp",
+      "observedAt": "2026-09-26",
+      "priceUsd": 55.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "miyoo-mini-plus",
+      "observedAt": "2026-09-26",
+      "priceUsd": 56.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg35xx-h",
+      "observedAt": "2026-09-26",
+      "priceUsd": 60.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg35xx-pro",
+      "observedAt": "2026-09-26",
+      "priceUsd": 61.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg34xx",
+      "observedAt": "2026-09-26",
+      "priceUsd": 63.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "cubexx",
+      "observedAt": "2026-09-26",
+      "priceUsd": 65.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "miyoo-mini-flip",
+      "observedAt": "2026-09-26",
+      "priceUsd": 65.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg40xx-h",
+      "observedAt": "2026-09-26",
+      "priceUsd": 65.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg40xx-v",
+      "observedAt": "2026-09-26",
+      "priceUsd": 67.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "trimui-brick",
+      "observedAt": "2026-09-26",
+      "priceUsd": 68.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rgsp",
+      "observedAt": "2026-09-26",
+      "priceUsd": 70.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg34xxsp",
+      "observedAt": "2026-09-26",
+      "priceUsd": 72.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg353ps",
+      "observedAt": "2026-09-26",
+      "priceUsd": 74.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "zero-40",
+      "observedAt": "2026-09-26",
+      "priceUsd": 74.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "trimui-smart-pro",
+      "observedAt": "2026-09-26",
+      "priceUsd": 75.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "miniloong-pocket",
+      "observedAt": "2026-09-26",
+      "priceUsd": 77.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "trimui-brick-pro",
+      "observedAt": "2026-09-26",
+      "priceUsd": 78.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg-vita",
+      "observedAt": "2026-09-26",
+      "priceUsd": 86.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg-arc-s",
+      "observedAt": "2026-09-26",
+      "priceUsd": 97.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg-rotate-plastic",
+      "observedAt": "2026-09-26",
+      "priceUsd": 99.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg505",
+      "observedAt": "2026-09-26",
+      "priceUsd": 105.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rgds",
+      "observedAt": "2026-09-26",
+      "priceUsd": 107.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rgds-plus",
+      "observedAt": "2026-09-26",
+      "priceUsd": 100.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg353p",
+      "observedAt": "2026-09-26",
+      "priceUsd": 115.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg-rotate-metal",
+      "observedAt": "2026-09-26",
+      "priceUsd": 116.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg-vita-pro",
+      "observedAt": "2026-09-26",
+      "priceUsd": 117.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg405v",
+      "observedAt": "2026-09-26",
+      "priceUsd": 118.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg405m",
+      "observedAt": "2026-09-26",
+      "priceUsd": 119.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg-slide",
+      "observedAt": "2026-09-26",
+      "priceUsd": 120.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "mangmi-air-x",
+      "observedAt": "2026-09-26",
+      "priceUsd": 125.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg406v",
+      "observedAt": "2026-09-26",
+      "priceUsd": 147.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg-cube",
+      "observedAt": "2026-09-26",
+      "priceUsd": 148.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg406h",
+      "observedAt": "2026-09-26",
+      "priceUsd": 151.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg55g1-4gb",
+      "observedAt": "2026-09-26",
+      "priceUsd": 155.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg476h",
+      "observedAt": "2026-09-26",
+      "priceUsd": 162.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg556",
+      "observedAt": "2026-09-26",
+      "priceUsd": 172.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "retroid-pocket-5",
+      "observedAt": "2026-09-26",
+      "priceUsd": 189.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "retroid-pocket-6",
+      "observedAt": "2026-09-26",
+      "priceUsd": 275.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg557",
+      "observedAt": "2026-09-26",
+      "priceUsd": 258.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg477v",
+      "observedAt": "2026-09-26",
+      "priceUsd": 264.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg-477m-8g",
+      "observedAt": "2026-09-26",
+      "priceUsd": 277.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "rg-477m-12g",
+      "observedAt": "2026-09-26",
+      "priceUsd": 312.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "retroid-pocket-nova",
+      "observedAt": "2026-09-26",
+      "priceUsd": 350.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "thor-base",
+      "observedAt": "2026-09-26",
+      "priceUsd": 305.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "ayn-thor-pro",
+      "observedAt": "2026-09-26",
+      "priceUsd": 418.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "odin-3-pro",
+      "observedAt": "2026-09-26",
+      "priceUsd": 613.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "retroid-pocket-duo-lite",
+      "observedAt": "2026-09-26",
+      "priceUsd": 170.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    },
+    {
+      "deviceId": "retroid-pocket-duo",
+      "observedAt": "2026-09-26",
+      "priceUsd": 300.0,
+      "condition": "new",
+      "source": "spreadsheet"
+    }
+  ],
   "pairs": []
 }

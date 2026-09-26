@@ -8,7 +8,10 @@ Expected columns (first row = headers, matched case-insensitively):
     Console List | Color | Screen | CPU | GPU | RAM | Storage | System | Games | Speaker | TF card | Battery |
     Charging | Others
 Optional columns that override the guesses below if you add them:
-    Brand | Form Factor | Price | Release Date | Status | Weight
+    Brand | Form Factor | Release Date | Status | Weight
+    Price  (current market price in USD, e.g. "48" or "$48 (+ shipping)"; saved as today's price observation,
+            so re-importing an updated sheet on a later day builds the price history)
+    MSRP / Launch Price  (the original launch price in USD)
     Popularity  (any whole number; higher sorts first on the default "popular" sort)
 
 Free-text cells are parsed with regexes. Anything that isn't in the sheet is either left out (unknown) or guessed
@@ -348,6 +351,14 @@ def guess_form_factor(name: str, slug: str, screen_text: str, others: str) -> tu
     return FORM_FACTOR_FALLBACK.get(slug, "horizontal"), True
 
 
+def parse_usd(value) -> float | None:
+    """48, "48", "$48", "$1,299.99 (+ shipping)" -> the number; anything without a number -> None"""
+    if value is None:
+        return None
+    m = re.search(r"\d+(?:\.\d+)?", str(value).replace(",", ""))
+    return float(m.group(0)) if m else None
+
+
 def slugify(name: str) -> str:
     s = name.lower().replace("+", " plus")
     return re.sub(r"[^a-z0-9]+", "-", s).strip("-")
@@ -373,7 +384,8 @@ def convert(path: Path):
     headers = [str(h).strip().lower() if h is not None else "" for h in next(rows)]
     name_col = headers[0]  # first column holds the console name ("Console List")
 
-    devices, report = [], []
+    devices, price_points, report = [], [], []
+    today = dt.date.today().isoformat()
     seen: set[str] = set()
     for line, values in enumerate(rows, start=2):
         row = dict(zip(headers, values))
@@ -454,11 +466,20 @@ def convert(path: Path):
         if not ratings:
             guesses.append(f"no emulation ratings: couldn't read Games '{games}'")
 
-        price = cell(row, "price", "msrp")
-        msrp = None
-        if price is not None:
-            m = re.search(r"\d+(?:\.\d+)?", str(price).replace(",", ""))
-            msrp = float(m.group(0)) if m else None
+        market_price = parse_usd(cell(row, "price"))
+        if cell(row, "price") is not None and market_price is None:
+            guesses.append(f"couldn't read Price '{cell(row, 'price')}'")
+        if market_price is not None:
+            price_points.append(
+                {
+                    "deviceId": slug,
+                    "observedAt": today,
+                    "priceUsd": market_price,
+                    "condition": "new",
+                    "source": "spreadsheet",
+                }
+            )
+        msrp = parse_usd(cell(row, "msrp", "launch price"))
         release = cell(row, "release date", "release")
         if isinstance(release, (dt.date, dt.datetime)):
             release = release.strftime("%Y-%m-%d")
@@ -506,7 +527,7 @@ def convert(path: Path):
         "removeDevicesNotListed": True,
         "systems": systems,
         "devices": devices,
-        "pricePoints": [],
+        "pricePoints": price_points,
         "pairs": [],
     }, report
 
@@ -528,7 +549,8 @@ def main():
         print(f"\nGuesses / problems to review ({len(report)} rows):")
         for r in report:
             print("  - " + r)
-    print("\nNo prices in the sheet: add pricePoints (or a Price column for MSRP) to enable price features.")
+    if not data["pricePoints"]:
+        print("\nNo prices in the sheet: add a Price column to enable price features.")
 
 
 if __name__ == "__main__":

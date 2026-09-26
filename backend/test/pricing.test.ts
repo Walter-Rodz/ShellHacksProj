@@ -27,14 +27,19 @@ describe('median', () => {
 });
 
 describe('summarize', () => {
-  it('returns nulls below the minimum sample size', () => {
+  it('shows stats from even one or two prices, but needs more for a trend', () => {
     const pts = [pt(1, 100), pt(2, 110)];
     expect(summarize(pts, pts, now)).toMatchObject({
-      avgUsd: null,
-      medianUsd: null,
+      avgUsd: 105,
+      medianUsd: 105,
       sampleSize: 2,
       trend: 'unknown',
     });
+    expect(summarize([pt(1, 48)], [pt(1, 48)], now)).toMatchObject({ avgUsd: 48, sampleSize: 1 });
+  });
+
+  it('returns nulls when there are no prices', () => {
+    expect(summarize([], [], now)).toMatchObject({ avgUsd: null, medianUsd: null, sampleSize: 0 });
   });
 
   it('computes stats and a downward trend', () => {
@@ -107,8 +112,9 @@ describe('startingPrice', () => {
     expect(startingPrice([pt(5, 120), pt(10, 99), pt(40, 50)], 150, now)).toBe(99);
   });
 
-  it('falls back to MSRP, then null', () => {
-    expect(startingPrice([pt(40, 50)], 150, now)).toBe(150);
+  it('falls back to the most recent price, then MSRP, then null', () => {
+    expect(startingPrice([pt(40, 50), pt(60, 45)], 150, now)).toBe(50); // 40 days ago is the most recent
+    expect(startingPrice([], 150, now)).toBe(150);
     expect(startingPrice([], null, now)).toBeNull();
   });
 });

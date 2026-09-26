@@ -1,4 +1,5 @@
 import { z } from 'zod';
+import { caseInsensitiveEnum, toSystemId, toTierId } from '../lib/aliases';
 import { bool, csv, num } from '../lib/http';
 import { FIT_ORDER, type DeviceSearchResponse, type FacetCount } from '../types';
 import { compactText, playsAtLeast, type Catalog, type CatalogDevice } from './catalog';
@@ -22,22 +23,29 @@ function tiersOf(device: CatalogDevice): TierId[] {
   ).map((tier) => tier.id);
 }
 
+const TIER_IDS = EMULATION_TIERS.map((tier) => tier.id) as [TierId, ...TierId[]];
+
+/** A system given by id or common name ("psx", "PS1", "PlayStation" all mean the same) */
+const systemId = z.string().transform(toSystemId);
+const lowercase = z.string().transform((value) => value.trim().toLowerCase());
+
 /**
  * Query params accepted by GET /api/devices. Lists are comma-separated ("formFactor=vertical,clamshell").
  * This schema is both the validation and the DeviceQuery type, so the two can't drift apart.
+ * Option values ignore case, and systems and tiers also accept common names (see lib/aliases.ts).
  */
 export const deviceQuerySchema = z.object({
   q: z.string().trim().max(100).optional(),
-  category: z.enum(['handheld', 'home']).optional(),
-  formFactor: csv(z.enum(['vertical', 'horizontal', 'clamshell', 'home'])).optional(),
+  category: caseInsensitiveEnum(['handheld', 'home']).optional(),
+  formFactor: csv(caseInsensitiveEnum(['vertical', 'horizontal', 'clamshell', 'home'])).optional(),
   brand: csv(z.string()).optional(),
   priceMin: num.min(0).optional(),
   priceMax: num.min(0).optional(),
   screenMin: num.min(0).optional(),
   screenMax: num.min(0).optional(),
-  panel: csv(z.string()).optional(),
+  panel: csv(lowercase).optional(),
   aspect: csv(z.string()).optional(),
-  os: csv(z.string()).optional(),
+  os: csv(lowercase).optional(),
   sticks: z.coerce.number().int().min(0).max(2).optional(),
   hallSticks: bool.optional(),
   triggers: bool.optional(),
@@ -46,12 +54,12 @@ export const deviceQuerySchema = z.object({
   bluetooth: bool.optional(),
   videoOut: bool.optional(),
   /** Emulation tier pills; a device matches if it's in ANY of the selected tiers */
-  tier: csv(z.enum(EMULATION_TIERS.map((tier) => tier.id) as [TierId, ...TierId[]])).optional(),
-  playsWell: csv(z.string()).optional(),
-  fitFor: z.string().optional(),
-  fitMin: z.enum(FIT_ORDER).optional(),
-  status: z.enum(['available', 'discontinued', 'upcoming']).optional(),
-  sort: z.enum(['price_asc', 'price_desc', 'newest', 'popularity', 'name']).optional(),
+  tier: csv(z.string().transform(toTierId).pipe(z.enum(TIER_IDS))).optional(),
+  playsWell: csv(systemId).optional(),
+  fitFor: systemId.optional(),
+  fitMin: caseInsensitiveEnum(FIT_ORDER).optional(),
+  status: caseInsensitiveEnum(['available', 'discontinued', 'upcoming']).optional(),
+  sort: caseInsensitiveEnum(['price_asc', 'price_desc', 'newest', 'popularity', 'name']).optional(),
   page: z.coerce.number().int().min(1).default(1),
   pageSize: z.coerce.number().int().min(1).max(60).default(24),
 });

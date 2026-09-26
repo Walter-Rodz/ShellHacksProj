@@ -1,6 +1,6 @@
 import type { DealFlag, PriceEvent, PricePoint, PriceSummary } from '../types';
 
-/** Fewer price points than this and we say "not enough data" instead of showing a number */
+/** Trends and deal detection need at least this many prices; with fewer they say "unknown" / no deal */
 const MIN_SAMPLE_SIZE = 3;
 /** Trend is "flat" within this many percent */
 const FLAT_TREND_PCT = 3;
@@ -56,7 +56,8 @@ function pricesOf(points: PricePoint[]) {
  */
 export function summarize(points: PricePoint[], trendPoints: PricePoint[], now: Date): PriceSummary {
   const prices = pricesOf(points);
-  const hasEnough = prices.length >= MIN_SAMPLE_SIZE;
+  // Shown from a single price; `sampleSize` tells the UI how many prices the numbers come from
+  const hasPrices = prices.length > 0;
   const latest =
     trendPoints
       .map((point) => point.observedAt)
@@ -64,10 +65,10 @@ export function summarize(points: PricePoint[], trendPoints: PricePoint[], now: 
       .at(-1) ?? null;
 
   return {
-    avgUsd: hasEnough ? round2(prices.reduce((sum, price) => sum + price, 0) / prices.length) : null,
-    medianUsd: hasEnough ? round2(median(prices)!) : null,
-    lowUsd: hasEnough ? Math.min(...prices) : null,
-    highUsd: hasEnough ? Math.max(...prices) : null,
+    avgUsd: hasPrices ? round2(prices.reduce((sum, price) => sum + price, 0) / prices.length) : null,
+    medianUsd: hasPrices ? round2(median(prices)!) : null,
+    lowUsd: hasPrices ? Math.min(...prices) : null,
+    highUsd: hasPrices ? Math.max(...prices) : null,
     sampleSize: prices.length,
     ...trend(trendPoints, now),
     lastUpdated: latest,
@@ -181,11 +182,12 @@ export function detectEvents(points: PricePoint[], releaseDate: string | null, f
 /* ------------------------------------------------------------------ card price */
 
 /**
- * The "from $X" price on a card: the cheapest price seen in the last 30 days, or the MSRP when there's no
- * recent price. null when neither is known.
+ * The "from $X" price on a card: the cheapest price seen in the last 30 days. When nothing is that recent it
+ * falls back to the most recent price, then the MSRP. null when no price is known at all.
  */
 export function startingPrice(points: PricePoint[], msrp: number | null, now: Date): number | null {
   const last30Days = pricesOf(inWindow(points, daysAgo(now, 30), isoDay(now)));
   if (last30Days.length > 0) return Math.min(...last30Days);
-  return msrp;
+  const mostRecent = [...points].sort((a, b) => a.observedAt.localeCompare(b.observedAt)).at(-1);
+  return mostRecent?.priceUsd ?? msrp;
 }
