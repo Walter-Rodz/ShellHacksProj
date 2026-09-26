@@ -5,6 +5,7 @@ import type { Db } from './db';
 import { errorHandler, notFoundHandler } from './lib/http';
 import { catalogRoutes } from './routes/catalog';
 import { imageRoutes } from './routes/images';
+import { aiRoutes } from './routes/ai';
 
 export function createApp(db: Db) {
   const app = express();
@@ -24,6 +25,9 @@ export function createApp(db: Db) {
 
   // Team only (x-admin-key header): console photos and brand logos
   app.use('/api', imageRoutes(db));
+
+  // AI assistant endpoints (optional)
+  app.use('/api', aiRoutes(db));
 
   app.use(notFoundHandler);
   app.use(errorHandler);
