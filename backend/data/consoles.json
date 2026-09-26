@@ -1,4 +1,5 @@
 {
+  "removeDevicesNotListed": true,
   "systems": [
     {
       "id": "gb",
@@ -3298,31 +3299,31 @@
       "formFactor": "horizontal",
       "releaseDate": null,
       "msrpUsd": null,
-      "status": "upcoming",
-      "summary": "Rumored / Concept PS Vita style handheld",
+      "status": "available",
+      "summary": "PS Vita style handheld",
       "popularity": 0,
       "aliases": [
         "rgvita"
       ],
       "specs": {
-        "chip": "Unisoc T820 / Dimensity 1100",
-        "cpu": "Unisoc T820 / Dimensity 1100",
-        "gpu": "Mali-G57 / Mali-G77",
-        "ramGb": 6.0,
+        "chip": "Unisoc Tiger T618 64-bit octa-core 2*A75@2.0GHz+6*A55@2.0GHz",
+        "cpu": "Unisoc Tiger T618 64-bit octa-core 2*A75@2.0GHz+6*A55@2.0GHz",
+        "gpu": "Mali-G52 MP2",
+        "ramGb": 3.0,
         "storage": {
-          "internalGb": 128.0,
+          "internalGb": 64.0,
           "expandable": true,
-          "note": "128GB UFS"
+          "note": "64GB UFS"
         },
         "screen": {
-          "sizeIn": 5.0,
+          "sizeIn": 5.46,
           "resolution": {
-            "w": 960,
-            "h": 544
+            "w": 1280,
+            "h": 720
           },
-          "panel": "oled",
+          "panel": "ips",
           "aspectRatio": "16:9",
-          "touch": false
+          "touch": true
         },
         "batteryMah": 5000,
         "controls": {},
@@ -3337,13 +3338,13 @@
         "speakers": "Stereo Speakers",
         "charging": "18W Fast Charging",
         "features": [
-          "Rumored / Concept PS Vita style handheld"
+          "PS Vita style handheld"
         ]
       },
       "os": [
         {
           "id": "android",
-          "name": "Android 13",
+          "name": "Android 12",
           "kind": "stock"
         }
       ],
@@ -3435,21 +3436,6 @@
         },
         {
           "systemId": "ps2",
-          "rating": "good",
-          "notes": "From spreadsheet: 'PS Vita style, PSP, PS2, GameCube'"
-        },
-        {
-          "systemId": "wii",
-          "rating": "good",
-          "notes": "From spreadsheet: 'PS Vita style, PSP, PS2, GameCube'"
-        },
-        {
-          "systemId": "3ds",
-          "rating": "good",
-          "notes": "From spreadsheet: 'PS Vita style, PSP, PS2, GameCube'"
-        },
-        {
-          "systemId": "vita",
           "rating": "good",
           "notes": "From spreadsheet: 'PS Vita style, PSP, PS2, GameCube'"
         }
@@ -3913,38 +3899,38 @@
       "formFactor": "clamshell",
       "releaseDate": null,
       "msrpUsd": null,
-      "status": "upcoming",
-      "summary": "Concept Dual-Screen handheld",
+      "status": "available",
+      "summary": "Dual-Screen handheld from anbernic aimed towards NDS",
       "popularity": 0,
       "aliases": [],
       "specs": {
-        "chip": "RK3566 / Unisoc T618",
-        "cpu": "RK3566 / Unisoc T618",
-        "gpu": "Mali-G52",
-        "ramGb": 2.0,
+        "chip": "RK3568 Quad-core 64-bit Cortex-A55, frequency up to 2.0GHz",
+        "cpu": "RK3568 Quad-core 64-bit Cortex-A55, frequency up to 2.0GHz",
+        "gpu": "ARM G52 2EE",
+        "ramGb": 3.0,
         "storage": {
           "internalGb": 32.0,
           "expandable": true,
-          "note": "32GB / 64GB"
+          "note": "32GB"
         },
         "screen": {
-          "sizeIn": 3.5,
+          "sizeIn": 4.0,
           "resolution": {
             "w": 640,
             "h": 480
           },
           "panel": "ips",
           "aspectRatio": "4:3",
-          "touch": false,
+          "touch": true,
           "secondary": {
-            "sizeIn": 3.5,
+            "sizeIn": 4.0,
             "resolution": {
               "w": 640,
               "h": 480
             },
             "panel": "ips",
             "aspectRatio": "4:3",
-            "touch": false
+            "touch": true
           }
         },
         "batteryMah": 4000,
@@ -3961,7 +3947,7 @@
         "speakers": "Stereo Speakers",
         "charging": "5V/2A",
         "features": [
-          "Concept Dual-Screen handheld"
+          "Dual-Screen handheld from anbernic aimed towards NDS"
         ]
       },
       "os": [
@@ -3980,87 +3966,62 @@
         {
           "systemId": "gb",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "gbc",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "gba",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "gg",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "nes",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "snes",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "md",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "pce",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "arcade",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "pico8",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "psx",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
-        },
-        {
-          "systemId": "n64",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
-        },
-        {
-          "systemId": "saturn",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "rating": "great",
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "nds",
           "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
-        },
-        {
-          "systemId": "dc",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
-        },
-        {
-          "systemId": "psp",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
-        },
-        {
-          "systemId": "3ds",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS1'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         }
       ]
     },
@@ -4073,62 +4034,61 @@
       "formFactor": "clamshell",
       "releaseDate": null,
       "msrpUsd": null,
-      "status": "upcoming",
-      "summary": "Concept Dual-Screen Pro handheld",
+      "status": "available",
+      "summary": "Dual-Screen handheld from anbernic aimed towards NDS, downgrade on some specs but more tailored towards what it wants to do, making it more affordable with a better screen",
       "popularity": 0,
       "aliases": [
         "rgdsplus"
       ],
       "specs": {
-        "chip": "Unisoc T820 / Dimensity 700",
-        "cpu": "Unisoc T820 / Dimensity 700",
-        "gpu": "Mali-G57",
-        "ramGb": 4.0,
+        "chip": "RK3568 Quad-core 64-bit Cortex-A55, frequency up to 2.0GHz",
+        "cpu": "RK3568 Quad-core 64-bit Cortex-A55, frequency up to 2.0GHz",
+        "gpu": "ARM G52 2EE",
+        "ramGb": 1.0,
         "storage": {
-          "internalGb": 128.0,
+          "internalGb": 16.0,
           "expandable": true,
-          "note": "128GB"
+          "note": "16GB"
         },
         "screen": {
-          "sizeIn": 3.5,
+          "sizeIn": 4.3,
           "resolution": {
-            "w": 640,
-            "h": 480
+            "w": 1024,
+            "h": 768
           },
-          "panel": "oled",
+          "panel": "ips",
           "aspectRatio": "4:3",
-          "touch": false,
+          "touch": true,
           "secondary": {
-            "sizeIn": 3.5,
+            "sizeIn": 4.3,
             "resolution": {
-              "w": 640,
-              "h": 480
+              "w": 1024,
+              "h": 768
             },
-            "panel": "oled",
+            "panel": "ips",
             "aspectRatio": "4:3",
-            "touch": false
+            "touch": true
           }
         },
-        "batteryMah": 5000,
+        "batteryMah": 4000,
         "controls": {},
-        "connectivity": {
-          "wifi": true,
-          "bluetooth": true
-        },
+        "connectivity": {},
         "colors": [
           "Black",
           "Silver"
         ],
         "speakers": "Stereo Speakers",
-        "charging": "18W Fast Charging",
+        "charging": "5V/2A",
         "features": [
-          "Concept Dual-Screen Pro handheld"
+          "Dual-Screen handheld from anbernic aimed towards NDS",
+          "downgrade on some specs but more tailored towards what it wants to do",
+          "making it more affordable with a better screen"
         ]
       },
       "os": [
         {
-          "id": "android",
-          "name": "Android 13",
+          "id": "linux",
+          "name": "Linux",
           "kind": "stock"
         }
       ],
@@ -4136,92 +4096,62 @@
         {
           "systemId": "gb",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "gbc",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "gba",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "gg",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "nes",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "snes",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "md",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "pce",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "arcade",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "pico8",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "psx",
           "rating": "great",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
-        },
-        {
-          "systemId": "n64",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
-        },
-        {
-          "systemId": "saturn",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         },
         {
           "systemId": "nds",
           "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
-        },
-        {
-          "systemId": "dc",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
-        },
-        {
-          "systemId": "psp",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
-        },
-        {
-          "systemId": "ps2",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
-        },
-        {
-          "systemId": "3ds",
-          "rating": "good",
-          "notes": "From spreadsheet: 'Nintendo DS, 3DS, PS2'"
+          "notes": "From spreadsheet: 'Up to Nintendo DS'"
         }
       ]
     },
@@ -4536,21 +4466,21 @@
       "formFactor": "horizontal",
       "releaseDate": null,
       "msrpUsd": null,
-      "status": "upcoming",
-      "summary": "Rumored / Concept PS Vita Pro style device",
+      "status": "available",
+      "summary": "PS Vita Pro style device",
       "popularity": 0,
       "aliases": [
         "rgvitapro"
       ],
       "specs": {
-        "chip": "Dimensity 1200 / Snapdragon 865",
-        "cpu": "Dimensity 1200 / Snapdragon 865",
+        "chip": "RK3576 64-bit octa-core processor: 4×A72 + 4×A53, up to 2.2GHz",
+        "cpu": "RK3576 64-bit octa-core processor: 4×A72 + 4×A53, up to 2.2GHz",
         "gpu": "Mali-G77 / Adreno 650",
-        "ramGb": 8.0,
+        "ramGb": 4.0,
         "storage": {
-          "internalGb": 256.0,
+          "internalGb": 0.0,
           "expandable": true,
-          "note": "256GB UFS 3.1"
+          "note": "64GB eMCP"
         },
         "screen": {
           "sizeIn": 5.5,
@@ -4558,7 +4488,7 @@
             "w": 1920,
             "h": 1080
           },
-          "panel": "oled",
+          "panel": "ips",
           "aspectRatio": "16:9",
           "touch": false
         },
@@ -4575,7 +4505,7 @@
         "speakers": "Stereo Speakers",
         "charging": "27W Fast Charging",
         "features": [
-          "Rumored / Concept PS Vita Pro style device"
+          "PS Vita Pro style device"
         ]
       },
       "os": [
@@ -6504,8 +6434,8 @@
       "formFactor": "horizontal",
       "releaseDate": null,
       "msrpUsd": null,
-      "status": "upcoming",
-      "summary": "Upcoming Next-Gen Retroid handheld",
+      "status": "available",
+      "summary": "Next-Gen Retroid handheld, featuring top left analog stick for better ergonomics emulating newer consoles",
       "popularity": 0,
       "aliases": [
         "retroidpocket6"
@@ -6544,7 +6474,8 @@
         "speakers": "Stereo Speakers",
         "charging": "45W Fast Charge",
         "features": [
-          "Upcoming Next-Gen Retroid handheld"
+          "Next-Gen Retroid handheld",
+          "featuring top left analog stick for better ergonomics emulating newer consoles"
         ]
       },
       "os": [
@@ -7988,174 +7919,6 @@
       ]
     },
     {
-      "id": "sundara",
-      "slug": "sundara",
-      "name": "Sundara",
-      "brand": "Unknown",
-      "category": "handheld",
-      "formFactor": "horizontal",
-      "releaseDate": null,
-      "msrpUsd": null,
-      "status": "upcoming",
-      "summary": "Concept PC Handheld / x86 architecture",
-      "popularity": 0,
-      "aliases": [],
-      "specs": {
-        "chip": "AMD Ryzen 7 7840U / 8840U",
-        "cpu": "AMD Ryzen 7 7840U / 8840U",
-        "gpu": "Radeon 780M",
-        "ramGb": 16.0,
-        "storage": {
-          "internalGb": 512.0,
-          "expandable": true,
-          "note": "512GB - 2TB NVMe"
-        },
-        "screen": {
-          "sizeIn": 7.0,
-          "resolution": {
-            "w": 1920,
-            "h": 1080
-          },
-          "panel": "oled",
-          "aspectRatio": "16:9",
-          "touch": false
-        },
-        "controls": {},
-        "connectivity": {
-          "wifi": true,
-          "bluetooth": true
-        },
-        "colors": [
-          "Clear White",
-          "Black"
-        ],
-        "speakers": "Quad Speakers",
-        "charging": "65W USB-PD",
-        "features": [
-          "Concept PC Handheld / x86 architecture"
-        ]
-      },
-      "os": [
-        {
-          "id": "windows",
-          "name": "Windows 11",
-          "kind": "stock"
-        },
-        {
-          "id": "steamos",
-          "name": "SteamOS",
-          "kind": "stock"
-        }
-      ],
-      "emulation": [
-        {
-          "systemId": "gb",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "gbc",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "gba",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "gg",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "nes",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "snes",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "md",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "pce",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "arcade",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "pico8",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "psx",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "n64",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "saturn",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "nds",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "dc",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "psp",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "gc",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "ps2",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "wii",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "3ds",
-          "rating": "great",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        },
-        {
-          "systemId": "switch",
-          "rating": "good",
-          "notes": "From spreadsheet: 'PC AAA Games, PS3, Switch, Xbox 360'"
-        }
-      ]
-    },
-    {
       "id": "retroid-pocket-duo-lite",
       "slug": "retroid-pocket-duo-lite",
       "name": "Retroid Pocket Duo Lite",
@@ -8171,9 +7934,9 @@
         "retroidpocketduolite"
       ],
       "specs": {
-        "chip": "Snapdragon 720G / T618",
-        "cpu": "Snapdragon 720G / T618",
-        "gpu": "Adreno 618 / Mali-G52",
+        "chip": "Qualcomm Dragonwing QCS6125",
+        "cpu": "Qualcomm Dragonwing QCS6125",
+        "gpu": "Qualcomm Adreno 610",
         "ramGb": 4.0,
         "storage": {
           "internalGb": 64.0,
@@ -8181,26 +7944,26 @@
           "note": "64GB"
         },
         "screen": {
-          "sizeIn": 3.5,
+          "sizeIn": 5.5,
           "resolution": {
-            "w": 640,
-            "h": 480
+            "w": 1920,
+            "h": 1080
           },
-          "panel": "ips",
-          "aspectRatio": "4:3",
+          "panel": "oled",
+          "aspectRatio": "16:9",
           "touch": false,
           "secondary": {
-            "sizeIn": 3.5,
+            "sizeIn": 4.2,
             "resolution": {
-              "w": 640,
-              "h": 480
+              "w": 1280,
+              "h": 960
             },
-            "panel": "ips",
+            "panel": "oled",
             "aspectRatio": "4:3",
             "touch": false
           }
         },
-        "batteryMah": 4500,
+        "batteryMah": 6000,
         "controls": {},
         "connectivity": {
           "wifi": true,
@@ -8327,9 +8090,9 @@
         "retroidpocketduo"
       ],
       "specs": {
-        "chip": "Snapdragon 865 / 888",
-        "cpu": "Snapdragon 865 / 888",
-        "gpu": "Adreno 650 / 660",
+        "chip": "Qualcomm Dragonwing Q-7790",
+        "cpu": "Qualcomm Dragonwing Q-7790",
+        "gpu": "Qualcomm Adreno 722",
         "ramGb": 8.0,
         "storage": {
           "internalGb": 128.0,
@@ -8337,16 +8100,16 @@
           "note": "128GB UFS 3.1"
         },
         "screen": {
-          "sizeIn": 3.7,
+          "sizeIn": 5.5,
           "resolution": {
-            "w": 1280,
-            "h": 960
+            "w": 1920,
+            "h": 1080
           },
           "panel": "oled",
-          "aspectRatio": "4:3",
+          "aspectRatio": "16:9",
           "touch": false,
           "secondary": {
-            "sizeIn": 3.7,
+            "sizeIn": 4.5,
             "resolution": {
               "w": 1280,
               "h": 960
@@ -8356,7 +8119,7 @@
             "touch": false
           }
         },
-        "batteryMah": 5500,
+        "batteryMah": 6000,
         "controls": {},
         "connectivity": {
           "wifi": true,

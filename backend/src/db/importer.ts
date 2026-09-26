@@ -1,4 +1,7 @@
+import { rmSync } from 'node:fs';
+import { join } from 'node:path';
 import { z } from 'zod';
+import { config } from '../config';
 import { tx, type Db } from './index';
 
 /*
@@ -7,6 +10,9 @@ import { tx, type Db } from './index';
  * Systems and devices are upserted by id. A device's `os` and `emulation` lists replace what was stored for
  * that device. Price points are appended; exact duplicates are skipped. See data/example-import.json.
  * Photos are not part of the import: upload them (POST /api/devices/:slug/images) or run `npm run images`.
+ *
+ * With `"removeDevicesNotListed": true` the file is treated as the whole catalog: consoles that aren't in it are
+ * deleted, with their prices and photos. The spreadsheet converter always sets this.
  */
 
 const resolution = z.object({ w: z.number().int().positive(), h: z.number().int().positive() });
@@ -62,6 +68,7 @@ const rating = z.enum(['great', 'good', 'playable', 'poor', 'unplayable']);
 const isoDate = z.iso.date();
 
 const importSchema = z.object({
+  removeDevicesNotListed: z.boolean().default(false),
   systems: z
     .array(
       z.object({
@@ -149,6 +156,7 @@ export function importData(db: Db, raw: unknown) {
     pricePointsSkipped: 0,
     pairs: 0,
   };
+  const removed: { id: string; name: string }[] = [];
 
   tx(db, () => {
     const upSystem = db.prepare(
@@ -251,7 +259,22 @@ export function importData(db: Db, raw: unknown) {
       upPair.run(p.deviceId, p.pairDeviceId, p.reason);
       counts.pairs++;
     }
+
+    if (data.removeDevicesNotListed) {
+      const listed = new Set(data.devices.map((d) => d.id));
+      const stored = db.prepare('SELECT id, name FROM devices').all() as { id: string; name: string }[];
+      for (const device of stored.filter((d) => !listed.has(d.id))) {
+        // Prices, ratings, OS options, pairs and photo records go with it (ON DELETE CASCADE)
+        db.prepare('DELETE FROM devices WHERE id = ?').run(device.id);
+        removed.push(device);
+      }
+    }
   });
 
-  return counts;
+  // Photo files are deleted only once the database change has been saved
+  for (const device of removed) {
+    rmSync(join(config.uploadsDir, 'devices', device.id), { recursive: true, force: true });
+  }
+
+  return { ...counts, removedDevices: removed.map((device) => device.name) };
 }

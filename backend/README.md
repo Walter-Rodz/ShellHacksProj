@@ -41,7 +41,8 @@ npm run convert -- "path/to/Console List.xlsx"         # spreadsheet -> data/con
 npm run import -- data/consoles.json                   # data/consoles.json -> database
 ```
 
-The server picks up the changes within 30 seconds; there's no need to restart it.
+The server picks up the changes within 30 seconds; there's no need to restart it. Consoles you delete from the
+spreadsheet are deleted from the database too, along with their prices and photos.
 
 `convert` prints a list of values it had to **guess**, because the spreadsheet doesn't have them. Check that
 list. To stop a guess, add the matching column to the spreadsheet:

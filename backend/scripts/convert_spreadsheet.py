@@ -65,7 +65,7 @@ GAME_PATTERNS = [
     (r"\bgb\s*/\s*gbc\b", ["gb", "gbc"]),
     (r"\bgbc\b", ["gbc"]),
     (r"\bgba\b", ["gba"]),
-    (r"\bps ?vita\b|\bvita\b", ["vita"]),
+    (r"\b(ps ?)?vita\b(?!\s*style)", ["vita"]),  # "PS Vita style" describes the shape, not the games
     (r"\bps2\b", ["ps2"]),
     (r"\b(ps1|psx|playstation)\b", ["psx"]),
     (r"\bpsp\b", ["psp"]),
@@ -130,10 +130,30 @@ def aspect_of(w: int, h: int) -> str:
 
 
 def parse_screen(text: str, guesses: list[str]):
+    """
+    Reads cells like '3.5-inch IPS 640x480', '5.46-inch IPS touchscreen, resolution 1280*720',
+    'Dual 4-inch IPS 640*480' (two identical screens) and
+    'Main display: 5.5-inch OLED 1080p, secondary display: 4.5-inch 1280 x 960' (two different screens).
+    """
     t = text or ""
-    size = re.search(r"(\d+(?:\.\d+)?)\s*(?:-?\s*inch|\"|”|in\b)", t, re.I)
-    res = re.search(r"(\d{3,4})\s*[x×]\s*(\d{3,4})", t)
-    p_res = re.search(r"\b(\d{3,4})p\b", t, re.I)
+    two_parts = re.split(r"secondary display:", t, flags=re.I)
+    if len(two_parts) == 2:
+        main = parse_one_screen(re.sub(r"^\s*main display:\s*", "", two_parts[0], flags=re.I), guesses)
+        second = parse_one_screen(two_parts[1], guesses, fallback_panel=main["panel"] if main else "ips")
+        if main and second:
+            main["secondary"] = second
+        return main
+
+    screen = parse_one_screen(t, guesses)
+    if screen and re.match(r"\s*dual\b", t, re.I):
+        screen["secondary"] = dict(screen)
+    return screen
+
+
+def parse_one_screen(text: str, guesses: list[str], fallback_panel: str = "ips"):
+    size = re.search(r"(\d+(?:\.\d+)?)\s*(?:-?\s*inch|\"|”|in\b)", text, re.I)
+    res = re.search(r"(\d{3,4})\s*[x×*]\s*(\d{3,4})", text)
+    p_res = re.search(r"\b(\d{3,4})p\b", text, re.I)
     if res:
         w, h = int(res.group(1)), int(res.group(2))
     elif p_res:
@@ -142,24 +162,29 @@ def parse_screen(text: str, guesses: list[str]):
         guesses.append(f"resolution {p_res.group(0)} read as {w}x{h} (16:9)")
     else:
         return None
-    panel = (
-        "amoled"
-        if re.search(r"amoled", t, re.I)
-        else "oled" if re.search(r"oled", t, re.I) else "lcd" if re.search(r"\blcd\b", t, re.I) else "ips"
-    )
-    ratio = re.search(r"\((\d+):(\d+)", t)
-    screen = {
+
+    if re.search(r"amoled", text, re.I):
+        panel = "amoled"
+    elif re.search(r"oled", text, re.I):
+        panel = "oled"
+    elif re.search(r"\blcd\b", text, re.I):
+        panel = "lcd"
+    elif re.search(r"\bips\b", text, re.I):
+        panel = "ips"
+    else:
+        panel = fallback_panel
+        guesses.append(f"panel type not given for '{text.strip()}', assumed {panel.upper()}")
+
+    ratio = re.search(r"\((\d+):(\d+)", text)
+    if not size:
+        guesses.append("screen size missing")
+    return {
         "sizeIn": float(size.group(1)) if size else 0,
         "resolution": {"w": w, "h": h},
         "panel": panel,
         "aspectRatio": f"{ratio.group(1)}:{ratio.group(2)}" if ratio else aspect_of(w, h),
-        "touch": bool(re.search(r"touch", t, re.I)),
+        "touch": bool(re.search(r"touch", text, re.I)),
     }
-    if not size:
-        guesses.append("screen size missing")
-    if re.match(r"\s*dual\b", t, re.I):
-        screen["secondary"] = {k: v for k, v in screen.items()}
-    return screen
 
 
 def parse_gb(text: str | None) -> float | None:
@@ -476,7 +501,14 @@ def convert(path: Path):
         }
         for k, (i, n, g, w, h, a, d, _t) in enumerate(SYSTEMS)
     ]
-    return {"systems": systems, "devices": devices, "pricePoints": [], "pairs": []}, report
+    # The spreadsheet is the whole catalog, so consoles deleted from it are deleted from the database too
+    return {
+        "removeDevicesNotListed": True,
+        "systems": systems,
+        "devices": devices,
+        "pricePoints": [],
+        "pairs": [],
+    }, report
 
 
 def main():
