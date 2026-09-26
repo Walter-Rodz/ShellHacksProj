@@ -1,0 +1,126 @@
+{
+  "systems": [
+    {
+      "id": "gba",
+      "name": "Game Boy Advance",
+      "generation": 6,
+      "native": {
+        "w": 240,
+        "h": 160
+      },
+      "aspectRatio": "3:2",
+      "dualScreen": false,
+      "sortOrder": 3
+    },
+    {
+      "id": "psp",
+      "name": "PSP",
+      "generation": 7,
+      "native": {
+        "w": 480,
+        "h": 272
+      },
+      "aspectRatio": "16:9",
+      "dualScreen": false,
+      "sortOrder": 15
+    }
+  ],
+  "devices": [
+    {
+      "id": "example-handheld",
+      "slug": "example-handheld",
+      "name": "Example Handheld",
+      "brand": "ExampleCo",
+      "category": "handheld",
+      "formFactor": "horizontal",
+      "releaseDate": "2025-01-15",
+      "msrpUsd": 99,
+      "status": "available",
+      "popularity": 50,
+      "summary": "Placeholder device showing the import format.",
+      "communityActivity": "active",
+      "buildQuality": 4,
+      "aliases": [
+        "exh"
+      ],
+      "specs": {
+        "chip": "Example SoC",
+        "ramGb": 2,
+        "storage": {
+          "internalGb": 32,
+          "expandable": true
+        },
+        "screen": {
+          "sizeIn": 4,
+          "resolution": {
+            "w": 960,
+            "h": 544
+          },
+          "panel": "ips",
+          "aspectRatio": "16:9",
+          "touch": false
+        },
+        "batteryMah": 4000,
+        "batteryLifeHrs": {
+          "min": 5,
+          "max": 8
+        },
+        "weightG": 230,
+        "dimensionsMm": {
+          "w": 170,
+          "h": 80,
+          "d": 20
+        },
+        "controls": {
+          "dpad": true,
+          "analogSticks": 2,
+          "stickType": "hall",
+          "faceButtons": 4,
+          "shoulders": "l1r1l2r2",
+          "rumble": true
+        },
+        "connectivity": {
+          "wifi": true,
+          "bluetooth": true,
+          "videoOut": "usb_c",
+          "headphoneJack": true
+        }
+      },
+      "os": [
+        {
+          "id": "android",
+          "name": "Android 13",
+          "kind": "stock"
+        },
+        {
+          "id": "rocknix",
+          "name": "ROCKNIX",
+          "kind": "custom",
+          "url": "https://rocknix.org"
+        }
+      ],
+      "emulation": {
+        "gba": "great",
+        "psp": "good"
+      }
+    }
+  ],
+  "pricePoints": [
+    {
+      "deviceId": "example-handheld",
+      "observedAt": "2025-06-01",
+      "priceUsd": 99,
+      "condition": "new",
+      "source": "retailer"
+    },
+    {
+      "deviceId": "example-handheld",
+      "observedAt": "2025-06-10",
+      "priceUsd": 79,
+      "condition": "used",
+      "source": "ebay_sold",
+      "url": "https://example.com/listing/1"
+    }
+  ],
+  "pairs": []
+}
