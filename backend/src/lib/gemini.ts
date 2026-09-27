@@ -3,8 +3,8 @@ import type { z } from 'zod';
 
 /*
  * One place for calling Gemini and getting JSON back (used by the AI Builder and the chat).
- * - Tries GEMINI_MODEL first. When a model is overloaded (Google's 503 "high demand") or too slow, it moves on to
- *   the next one in GEMINI_FALLBACK_MODELS.
+ * - Tries GEMINI_MODEL first. When a model is overloaded (503 "high demand"), out of quota (429, e.g. the free
+ *   daily limit is used up) or too slow, it moves on to the next one in GEMINI_FALLBACK_MODELS.
  * - The reply must be JSON matching `schema`; anything else counts as a failure.
  * - Returns null when there's no API key or every model failed, so callers can fall back to something non-AI.
  */
@@ -49,10 +49,11 @@ export async function askGeminiForJson<T>(options: {
       );
       return options.schema.parse(JSON.parse(response.text ?? ''));
     } catch (err) {
-      const busy = (err as { status?: number }).status === 503 || /timed out/.test(String(err));
+      const status = (err as { status?: number }).status;
+      const unavailable = status === 503 || status === 429 || /timed out/.test(String(err));
       console.error(`${options.label}: ${model} failed:`, (err as Error).message?.slice(0, 200));
-      if (!busy) return null; // a real problem (bad key, bad reply): don't keep trying
-      // Overloaded or too slow: try the next model
+      if (!unavailable) return null; // a real problem (bad key, bad reply): don't keep trying
+      // Overloaded, out of quota or too slow: this model can't answer right now, so try the next one
     }
   }
   return null;
