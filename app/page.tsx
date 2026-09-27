@@ -11,7 +11,7 @@ type CollectionItem = {
 const exampleItems: CollectionItem[] = [
   { name: "ANBERNIC RG-Ds", image: "/images/consoles/anbernic-rg-ds.png" },
   { name: "Odin 3 Pro", image: "/images/consoles/odin-3-pro.png" },
-  { name: "Miyoo Flip", image: "/images/consoles/miyoo-flip.png" },
+  { name: "Miyoo Flip", image: "/images/consoles/Miyoo flip.png" },
   { name: "Retroid Pocket 5", image: "/images/consoles/retroid-pocket-5.png" },
 ];
  
