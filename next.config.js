@@ -3,8 +3,8 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  basePath: '/ShellHacksProj',
-  assetPrefix: '/ShellHacksProj/',
+  // basePath: '/GoRetroWithUs',
+  // assetPrefix: '/GoRetroWithUs/',
 };
 
 module.exports = nextConfig;
