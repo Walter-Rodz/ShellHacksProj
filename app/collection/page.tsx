@@ -21,6 +21,7 @@ type ConsoleItem = {
   tfCard: string;
   battery: string;
   charger: string;
+  price: number;
 };
  
 const consoles: ConsoleItem[] = [
@@ -39,6 +40,7 @@ const consoles: ConsoleItem[] = [
     tfCard: "Dual TF Slots",
     battery: "4000mAh",
     charger: "5V/2A",
+    price: 199,
   },
   {
     id: "odin-3-pro",
@@ -55,6 +57,7 @@ const consoles: ConsoleItem[] = [
     tfCard: "MicroSD",
     battery: "8000mAh",
     charger: "65W Quick Charge",
+    price: 499,
   },
   {
     id: "miyoo-flip",
@@ -71,6 +74,7 @@ const consoles: ConsoleItem[] = [
     tfCard: "Dual MicroSD Slots",
     battery: "3000mAh",
     charger: "USB-C",
+    price: 149,
   },
   {
     id: "retroid-pocket-5",
@@ -87,9 +91,10 @@ const consoles: ConsoleItem[] = [
     tfCard: "MicroSD",
     battery: "6000mAh",
     charger: "USB-C",
+    price: 299,
   },
   {
-    id: "rg35xx-plus", // Not in the excel sheet
+    id: "rg35xx-plus",
     name: "Anbernic RG35XX Plus",
     image: "/images/consoles/rg35xx-plus.png",
     screenSize: '3.5"',
@@ -99,18 +104,19 @@ const consoles: ConsoleItem[] = [
     storage: "64GB",
     system: "Linux",
     games: "GBA, PS1, SNES",
-    speaker: "Mono", // Not listed
+    speaker: "Mono",
     tfCard: "Dual TF Slots",
     battery: "3500mAh",
     charger: "USB-C",
+    price: 129,
   },
   {
-    id: "rgb30", // Not in the excel sheet
+    id: "rgb30",
     name: "Powkiddy RGB30",
     image: "/images/consoles/rgb30.png",
     screenSize: '4.0"',
     cpu: "RK3566",
-    gpu: "Mali-G52", // None listed
+    gpu: "Mali-G52",
     ram: "4GB",
     storage: "18GB",
     system: "Linux / Android",
@@ -119,9 +125,10 @@ const consoles: ConsoleItem[] = [
     tfCard: "Dual TF Slots",
     battery: "4100mAh",
     charger: "USB-C",
+    price: 179,
   },
   {
-    id: "odin-2", // Not in the excel sheet, the original Odin 2 is actually discontinued, stats found for Odin 2 Portal
+    id: "odin-2",
     name: "AYN Odin 2",
     image: "/images/consoles/odin-2.png",
     screenSize: '7.0"',
@@ -135,6 +142,7 @@ const consoles: ConsoleItem[] = [
     tfCard: "TF Slot",
     battery: "8000mAh",
     charger: "USB-C",
+    price: 399,
   },
   {
     id: "rg556",
@@ -151,6 +159,7 @@ const consoles: ConsoleItem[] = [
     tfCard: "TF Slot",
     battery: "5500mAh",
     charger: "USB-C",
+    price: 613,
   },
   {
     id: "trimui-smart-pro",
@@ -167,14 +176,15 @@ const consoles: ConsoleItem[] = [
     tfCard: "TF Slot",
     battery: "5000mAh",
     charger: "USB-C",
+    price: 159,
   },
   {
-    id: "gkd-pixel-2", // Not in the excel sheet
+    id: "gkd-pixel-2",
     name: "GKD Pixel 2",
     image: "/images/consoles/gkd-pixel-2.png",
     screenSize: '2.4" Mini',
     cpu: "RK3326S",
-    gpu: "Mali-400", // Not listed
+    gpu: "Mali-400",
     ram: "1GB",
     storage: "16GB",
     system: "Linux",
@@ -183,6 +193,7 @@ const consoles: ConsoleItem[] = [
     tfCard: "Up to 128GB",
     battery: "1800mAh",
     charger: "USB-C",
+    price: 89,
   },
 ];
  
@@ -242,29 +253,58 @@ const EMPTY_FILTERS: Record<FilterKey, string[]> = {
 };
  
 /* ---------- AI Builder ---------- */
+/*
+ * The AI Builder only collects the user's answers below — it never filters,
+ * scores, or reorders anything in the collection grid. On the last question,
+ * the finished answers are stored in `aiSubmittedAnswers` (see component
+ * state) so a backend call can pick them up and do the actual matching.
+ */
  
-type AiKey = "use" | "screen" | "os" | "battery";
+type AiKey = "price" | "screen" | "os" | "battery";
  
 type AiAnswers = Record<AiKey, string>;
  
-const EMPTY_AI_ANSWERS: AiAnswers = { use: "", screen: "", os: "", battery: "" };
+const PRICE_MIN = 0;
+const PRICE_MAX = 620;
+const PRICE_DEFAULT = "310";
  
-const AI_QUESTIONS: {
-  key: AiKey;
-  label: string;
-  options: { value: string; label: string }[];
-}[] = [
+const EMPTY_AI_ANSWERS: AiAnswers = {
+  price: PRICE_DEFAULT,
+  screen: "",
+  os: "",
+  battery: "",
+};
+ 
+type AiQuestion =
+  | {
+      key: AiKey;
+      type: "choice";
+      label: string;
+      options: { value: string; label: string }[];
+    }
+  | {
+      key: AiKey;
+      type: "range";
+      label: string;
+      min: number;
+      max: number;
+      step: number;
+      format: (value: number) => string;
+    };
+ 
+const AI_QUESTIONS: AiQuestion[] = [
   {
-    key: "use",
-    label: "What do you mostly want to play?",
-    options: [
-      { value: "retro", label: "Classic retro (GB / GBA / PS1)" },
-      { value: "midrange", label: "Mid-era 3D (PS2 / GameCube / N64)" },
-      { value: "highend", label: "Modern / hybrid (Switch-level)" },
-    ],
+    key: "price",
+    type: "range",
+    label: "What's your preferred price range?",
+    min: PRICE_MIN,
+    max: PRICE_MAX,
+    step: 10,
+    format: (value) => `$${value}`,
   },
   {
     key: "screen",
+    type: "choice",
     label: "Preferred screen size?",
     options: [
       { value: "compact", label: 'Compact (under 4")' },
@@ -274,6 +314,7 @@ const AI_QUESTIONS: {
   },
   {
     key: "os",
+    type: "choice",
     label: "OS preference?",
     options: [
       { value: "linux", label: "Linux (lightweight, open)" },
@@ -283,6 +324,7 @@ const AI_QUESTIONS: {
   },
   {
     key: "battery",
+    type: "choice",
     label: "Battery priority?",
     options: [
       { value: "long", label: "Long-lasting (5000mAh+)" },
@@ -291,31 +333,6 @@ const AI_QUESTIONS: {
   },
 ];
  
-function scoreConsole(c: ConsoleItem, answers: AiAnswers): number {
-  let score = 0;
-  const gamesLower = c.games.toLowerCase();
- 
-  if (answers.use === "retro" && /gb|gbc|gba|snes|ps1|nds/.test(gamesLower)) score += 2;
-  if (answers.use === "midrange" && /ps2|gamecube|n64|dreamcast|wii/.test(gamesLower)) score += 2;
-  if (answers.use === "highend" && /switch|ps2|gamecube/.test(gamesLower)) score += 2;
- 
-  const screenInches = parseFloat(c.screenSize);
-  if (answers.screen === "compact" && screenInches < 4) score += 1;
-  if (answers.screen === "medium" && screenInches >= 4 && screenInches < 6) score += 1;
-  if (answers.screen === "large" && screenInches >= 6) score += 1;
- 
-  const systemLower = c.system.toLowerCase();
-  if (answers.os === "linux" && systemLower.includes("linux")) score += 1;
-  if (answers.os === "android" && systemLower.includes("android")) score += 1;
-  if (answers.os === "any") score += 0.5;
- 
-  const mah = parseInt(c.battery, 10) || 0;
-  if (answers.battery === "long" && mah >= 5000) score += 1;
-  if (answers.battery === "standard" && mah < 5000) score += 1;
- 
-  return score;
-}
- 
 export default function CollectionPage() {
   const [filters, setFilters] = useState<Record<FilterKey, string[]>>(EMPTY_FILTERS);
  
@@ -323,8 +340,17 @@ export default function CollectionPage() {
   const [activeFilterTab, setActiveFilterTab] = useState<FilterKey>(FILTER_FIELDS[0].key);
  
   const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [aiStep, setAiStep] = useState(0);
   const [aiAnswers, setAiAnswers] = useState<AiAnswers>(EMPTY_AI_ANSWERS);
-  const [aiResults, setAiResults] = useState<ConsoleItem[] | null>(null);
+ 
+  // Holds the finished answers once the user completes the wizard, ready to
+  // be handed to a backend. These variables are read-only from the
+  // collection's point of view — nothing below ever uses them to filter or
+  // reorder consoles. `aiSubmittedAnswersString` is the same data serialized
+  // to a plain string, which is what you'd actually send as the request body.
+  const [aiSubmittedAnswers, setAiSubmittedAnswers] = useState<AiAnswers | null>(null);
+  const [aiSubmittedAnswersString, setAiSubmittedAnswersString] = useState<string | null>(null);
+  const [showAiBanner, setShowAiBanner] = useState(false);
  
   const options = useMemo(() => {
     const result = {} as Record<FilterKey, string[]>;
@@ -371,26 +397,51 @@ export default function CollectionPage() {
   const activeCount = Object.values(filters).reduce((sum, arr) => sum + arr.length, 0);
   const selected = consoles.find((c) => c.id === selectedId) ?? null;
  
-  const displayList = aiResults ?? filtered;
+  // The grid always reflects the dropdown/checklist filters only. The AI
+  // Builder never touches this.
+  const displayList = filtered;
  
-  const allAiAnswered = AI_QUESTIONS.every((q) => aiAnswers[q.key] !== "");
+  // ---------- AI Builder: step-by-step flow ----------
+  const currentQuestion = AI_QUESTIONS[aiStep];
+  const isLastQuestion = aiStep === AI_QUESTIONS.length - 1;
+  const currentAnswered =
+    currentQuestion.type === "range" || aiAnswers[currentQuestion.key] !== "";
  
-  const handleAiAnswer = (key: AiKey, value: string) =>
-    setAiAnswers((prev) => ({ ...prev, [key]: value }));
- 
-  const handleAiSubmit = () => {
-    const scored = consoles
-      .map((c) => ({ c, score: scoreConsole(c, aiAnswers) }))
-      .sort((a, b) => b.score - a.score);
-    const top = scored.slice(0, 4).map((s) => s.c);
-    setAiResults(top);
-    setSelectedId(top[0]?.id ?? null);
-    setAiModalOpen(false);
+  const openAiBuilder = () => {
+    setAiStep(0);
+    setAiModalOpen(true);
   };
  
-  const clearAiResults = () => {
-    setAiResults(null);
-    setAiAnswers(EMPTY_AI_ANSWERS);
+  const handleAiAnswer = (key: AiKey, value: string) => {
+    setAiAnswers((prev) => ({ ...prev, [key]: value }));
+  };
+ 
+  const goBack = () => setAiStep((prev) => Math.max(prev - 1, 0));
+ 
+  const goNext = () => {
+    if (isLastQuestion) {
+      handleAiSubmit();
+    } else {
+      setAiStep((prev) => Math.min(prev + 1, AI_QUESTIONS.length - 1));
+    }
+  };
+ 
+  const handleAiSubmit = () => {
+    // Just store the answers — no scoring, filtering, or grid changes here.
+    const answersString = JSON.stringify(aiAnswers);
+ 
+    setAiSubmittedAnswers(aiAnswers);
+    setAiSubmittedAnswersString(answersString);
+    setShowAiBanner(true);
+    setAiModalOpen(false);
+ 
+    // TODO: hand this string off to the backend, e.g.:
+    // fetch("/api/ai-builder", {
+    //   method: "POST",
+    //   headers: { "Content-Type": "application/json" },
+    //   body: answersString,
+    // });
+    console.log("AI Builder answers ready for backend:", answersString);
   };
  
   return (
@@ -463,23 +514,30 @@ export default function CollectionPage() {
               <span className={styles.aiBuilderSpark} aria-hidden="true">✦</span> AI Builder
             </p>
             <p className={styles.aiBuilderDesc}>
-              Answer a few quick questions and get matched to the right handheld.
+              Answer a few quick questions — we&rsquo;ll pass them along to find your matches.
             </p>
             <button
               type="button"
               className={styles.aiBuilderButton}
-              onClick={() => setAiModalOpen(true)}
+              onClick={openAiBuilder}
             >
               Launch AI Builder
             </button>
           </div>
         </div>
  
-        {aiResults && (
+        {showAiBanner && aiSubmittedAnswersString && (
           <div className={styles.aiResultsBanner}>
-            <span>AI-suggested picks based on your answers ({aiResults.length})</span>
-            <button type="button" className={styles.aiClearButton} onClick={clearAiResults}>
-              Clear suggestions
+            <div className={styles.aiBannerText}>
+              <span>Got your answers — saved for backend matching.</span>
+              <code className={styles.aiAnswersPreview}>{aiSubmittedAnswersString}</code>
+            </div>
+            <button
+              type="button"
+              className={styles.aiClearButton}
+              onClick={() => setShowAiBanner(false)}
+            >
+              Dismiss
             </button>
           </div>
         )}
@@ -538,6 +596,7 @@ export default function CollectionPage() {
                   />
                 )}
                 <h2 className={styles.detailName}>{selected.name}</h2>
+                <p className={styles.detailPrice}>${selected.price}</p>
                 <dl className={styles.specList}>
                   {SPEC_ROWS.map(({ key, label }) => (
                     <div className={styles.specRow} key={key}>
@@ -574,7 +633,7 @@ export default function CollectionPage() {
                   AI Builder
                 </h2>
                 <p className={styles.modalSubtitle}>
-                  A few quick questions, then we&apos;ll surface your best matches.
+                  A few quick questions, then we&apos;ll pass your answers along.
                 </p>
               </div>
               <button
@@ -587,39 +646,72 @@ export default function CollectionPage() {
               </button>
             </div>
  
-            {AI_QUESTIONS.map((q) => (
-              <div className={styles.questionBlock} key={q.key}>
-                <span className={styles.questionLabel}>{q.label}</span>
-                {q.options.map((opt) => (
+            <div className={styles.progressWrap}>
+              <div className={styles.progressTrack}>
+                <div
+                  className={styles.progressFill}
+                  style={{ width: `${((aiStep + 1) / AI_QUESTIONS.length) * 100}%` }}
+                />
+              </div>
+              <span className={styles.progressLabel}>
+                {aiStep + 1} / {AI_QUESTIONS.length}
+              </span>
+            </div>
+ 
+            <div className={styles.questionBlock}>
+              <span className={styles.questionLabel}>{currentQuestion.label}</span>
+ 
+              {currentQuestion.type === "choice" ? (
+                currentQuestion.options.map((opt) => (
                   <label className={styles.optionRow} key={opt.value}>
                     <input
                       type="radio"
-                      name={q.key}
+                      name={currentQuestion.key}
                       value={opt.value}
-                      checked={aiAnswers[q.key] === opt.value}
-                      onChange={() => handleAiAnswer(q.key, opt.value)}
+                      checked={aiAnswers[currentQuestion.key] === opt.value}
+                      onChange={() => handleAiAnswer(currentQuestion.key, opt.value)}
                     />
                     {opt.label}
                   </label>
-                ))}
-              </div>
-            ))}
+                ))
+              ) : (
+                <div className={styles.priceSlider}>
+                  <input
+                    type="range"
+                    min={currentQuestion.min}
+                    max={currentQuestion.max}
+                    step={currentQuestion.step}
+                    value={aiAnswers[currentQuestion.key]}
+                    onChange={(e) => handleAiAnswer(currentQuestion.key, e.target.value)}
+                    aria-label={currentQuestion.label}
+                  />
+                  <div className={styles.priceScale}>
+                    <span>{currentQuestion.format(currentQuestion.min)}</span>
+                    <span className={styles.priceValue}>
+                      {currentQuestion.format(Number(aiAnswers[currentQuestion.key]))}
+                    </span>
+                    <span>{currentQuestion.format(currentQuestion.max)}</span>
+                  </div>
+                </div>
+              )}
+            </div>
  
             <div className={styles.modalFooter}>
               <button
                 type="button"
                 className={styles.modalSecondary}
-                onClick={() => setAiModalOpen(false)}
+                onClick={aiStep === 0 ? () => setAiModalOpen(false) : goBack}
               >
-                Cancel
+                {aiStep === 0 ? "Cancel" : "Back"}
               </button>
+ 
               <button
                 type="button"
                 className={styles.modalPrimary}
-                onClick={handleAiSubmit}
-                disabled={!allAiAnswered}
+                onClick={goNext}
+                disabled={!currentAnswered}
               >
-                Show my matches
+                {isLastQuestion ? "Save my answers" : "Submit"}
               </button>
             </div>
           </div>

@@ -274,6 +274,37 @@
   color: var(--lime);
 }
  
+.aiBannerText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+ 
+.aiAnswersPreview {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.7rem;
+  color: #cdbdf0;
+  background: rgba(14, 15, 25, 0.5);
+  border: 1px solid rgba(243, 243, 243, 0.12);
+  border-radius: 3px;
+  padding: 0.35rem 0.55rem;
+}
+ 
+.aiAnswersPreview::-webkit-scrollbar {
+  height: 4px;
+}
+ 
+.aiAnswersPreview::-webkit-scrollbar-thumb {
+  background: rgba(234, 144, 16, 0.4);
+  border-radius: 3px;
+}
+ 
 .aiClearButton {
   appearance: none;
   border: 1px solid var(--lime);
@@ -429,6 +460,14 @@
   font-size: 1.1rem;
   font-weight: 700;
   color: var(--pink);
+  margin: 0 0 0.4rem 0;
+}
+ 
+.detailPrice {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--lime);
   margin: 0 0 0.9rem 0;
 }
  
@@ -580,6 +619,34 @@
  
 .optionRow input {
   accent-color: var(--pink);
+}
+ 
+.priceSlider {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.4rem 0 0.2rem;
+}
+ 
+.priceSlider input[type="range"] {
+  width: 100%;
+  accent-color: var(--pink);
+  cursor: pointer;
+}
+ 
+.priceScale {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #9a86c9;
+}
+ 
+.priceValue {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--lime);
 }
  
 .modalFooter {
