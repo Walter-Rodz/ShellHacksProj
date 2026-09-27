@@ -9,7 +9,6 @@
   "scripts": {
     "dev": "tsx watch src/server.ts",
     "start": "tsx src/server.ts",
-    "start:prod": "npm run import -- data/consoles.json && npm start",
     "convert": "python scripts/convert_spreadsheet.py",
     "import": "tsx src/db/import.ts",
     "test": "vitest run",
@@ -21,7 +20,6 @@
     "cors": "^2.8.6",
     "dotenv": "^18.0.4",
     "express": "^5.2.1",
-    "tsx": "^4.23.15",
     "zod": "^4.6.5"
   },
   "devDependencies": {
@@ -29,6 +27,7 @@
     "@types/express": "^5.0.6",
     "@types/node": "^22.20.4",
     "prettier": "^3.9.9",
+    "tsx": "^4.23.15",
     "typescript": "5.9",
     "vitest": "^5.0.2"
   },

@@ -409,41 +409,7 @@ The database (`data/retro.db`) and `.env` are not saved to git. Each person impo
 
 ---
 
-## 6. Deploying (your own domain)
-
-The site is two services running at the same time:
-
-| | Where | Address |
-|---|---|---|
-| Frontend (Next.js) | Vercel | `https://yourdomain.com` |
-| Backend (this folder) | Render | `https://api.yourdomain.com` |
-
-**Backend on Render** (the repo has a `render.yaml` blueprint):
-
-1. In Render: **New → Blueprint**, connect this GitHub repo, and choose the **Backend** branch.
-2. Fill in the two values it asks for:
-   - `CORS_ORIGINS`: your site's addresses, e.g. `https://yourdomain.com,https://www.yourdomain.com,https://*.vercel.app`
-     (the last one lets Vercel preview deployments use the API too)
-   - `GEMINI_API_KEY`: your Gemini key
-3. Deploy. Every start rebuilds the database from `data/consoles.json` (`npm run start:prod`), so updating the
-   catalog means: convert the spreadsheet, commit `data/consoles.json`, push. Render redeploys automatically.
-4. Check `https://<your-service>.onrender.com/api/health` returns `{"ok":true}`.
-5. Optional: in the service's **Settings → Custom Domains**, add `api.yourdomain.com` and create the DNS record Render
-   shows you at your domain provider.
-
-**Frontend on Vercel:** in the project's **Settings → Environment Variables**, set
-`NEXT_PUBLIC_API_URL` = `https://api.yourdomain.com` (or the `onrender.com` address), then **redeploy** (the value is
-built into the site, so it only takes effect on a new deployment).
-
-Good to know:
-- Render's free plan sleeps after about 15 minutes without visits; the next visit then takes 30-50 seconds while it
-  wakes up. The paid "Starter" plan stays awake.
-- The server keeps no user data (collections are saved in each visitor's browser), so nothing is lost when it
-  restarts or sleeps.
-- Price history builds from each import, so to keep history across deploys, keep adding new prices to the
-  spreadsheet rather than replacing old ones.
-
-## 7. Where things are
+## 6. Where things are
 
 ```
 backend/
