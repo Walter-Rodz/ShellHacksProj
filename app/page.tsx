@@ -23,13 +23,11 @@ export default function Home() {
       <div className={styles.layout}>
         <main className={styles.main}>
           <h1 className={styles.title}>
-            <span className={styles.titleAccent}>PROJECT</span>
+            <span className={styles.titleAccent}>GET RETRO WITH US</span>
           </h1>
  
           <p className={styles.lede}>
-            Look up any console, see what it&rsquo;s actually worth, and track
-            the collection you&rsquo;ve built &mdash; from launch-day classics
-            to the ones still on your list.
+            Find the perfect emulator console for your collection, see what it&rsquo;s actually worth, find out its specs, what games it can play, and track the collection you&rsquo;ve built.
           </p>
  
           <Link href="/collection" className={styles.cta}>

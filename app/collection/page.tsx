@@ -526,22 +526,6 @@ export default function CollectionPage() {
           </div>
         </div>
  
-        {showAiBanner && aiSubmittedAnswersString && (
-          <div className={styles.aiResultsBanner}>
-            <div className={styles.aiBannerText}>
-              <span>Got your answers — saved for backend matching.</span>
-              <code className={styles.aiAnswersPreview}>{aiSubmittedAnswersString}</code>
-            </div>
-            <button
-              type="button"
-              className={styles.aiClearButton}
-              onClick={() => setShowAiBanner(false)}
-            >
-              Dismiss
-            </button>
-          </div>
-        )}
- 
         <div className={styles.browseRow}>
           <div className={styles.gridPanel}>
             <div className={styles.grid}>
@@ -632,9 +616,6 @@ export default function CollectionPage() {
                 <h2 id="ai-builder-title" className={styles.modalTitle}>
                   AI Builder
                 </h2>
-                <p className={styles.modalSubtitle}>
-                  A few quick questions, then we&apos;ll pass your answers along.
-                </p>
               </div>
               <button
                 type="button"
