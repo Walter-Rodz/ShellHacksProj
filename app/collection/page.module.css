@@ -526,6 +526,36 @@
   color: var(--pink);
 }
  
+.progressWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+ 
+.progressTrack {
+  flex: 1 1 auto;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(243, 243, 243, 0.12);
+  overflow: hidden;
+}
+ 
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--lime), var(--pink));
+  transition: width 220ms ease;
+}
+ 
+.progressLabel {
+  flex: none;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  color: #9a86c9;
+  white-space: nowrap;
+}
+ 
 .questionBlock {
   margin-bottom: 1.3rem;
 }
@@ -554,7 +584,8 @@
  
 .modalFooter {
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
+  align-items: center;
   gap: 0.7rem;
   margin-top: 1rem;
   padding-top: 1rem;
