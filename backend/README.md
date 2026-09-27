@@ -128,6 +128,9 @@ Copy [`src/types.ts`](src/types.ts) into the frontend. It describes the exact sh
 | Compare consoles side by side | `GET /api/compare?ids=rg35xxsp,miyoo-flip` (2 to 4 consoles) |
 | List of emulated systems | `GET /api/systems` |
 | AI recommendations from a user's answers | `POST /api/ai/recommend` |
+| AI Builder wizard (4 questions) | `POST /api/ai-builder` |
+| "Ask AI" chat | `POST /api/ai/chat` |
+| My collection and price tracking | `POST /api/collection/summary` |
 
 `:slug` is the console's short id from its card, for example `rg35xxsp` or `retroid-pocket-5`.
 
@@ -170,6 +173,7 @@ Example: `/api/devices?brand=Anbernic,Miyoo&formFactor=clamshell&tier=ps2_gc&pri
 | `hallSticks`, `triggers` | `true` | Has hall-effect sticks / L2+R2 triggers |
 | `wifi`, `bluetooth`, `videoOut` | `true` | Has Wi-Fi / Bluetooth / video output |
 | `batteryMin` | `6` | Battery life in hours |
+| `batteryMahMin` | `5000` | Battery capacity in mAh |
 | `sort` | `price_asc` | `popularity` (default), `price_asc`, `price_desc`, `newest` (release date), `name` |
 | `page`, `pageSize` | `2`, `24` | Paging (at most 60 per page) |
 
@@ -267,6 +271,85 @@ Gemini turns the answers into the same filters `GET /api/devices` uses, then the
 consoles. Without a `GEMINI_API_KEY` (or if Gemini fails) it falls back to a plain name search on the answers.
 An empty `answers` returns `400 { "error": "answers required" }`.
 
+### AI Builder: `POST /api/ai-builder`
+
+Takes the AI Builder wizard's answers exactly as the frontend sends them, and returns the top 3 consoles, each with
+a plain-language reason:
+
+```jsonc
+// Request body (every field optional; letter case doesn't matter)
+{ "price": "310", "screen": "compact", "os": "linux", "battery": "long" }
+//  price:   highest price in USD
+//  screen:  "compact" (under 4"), "medium" (4"–5.5"), "large" (over 5.5")
+//  os:      "linux" (includes Linux-based custom OSes), "android", or "any"
+//  battery: "long" (5000 mAh+) or "standard"
+
+// Response
+{
+  "picks": [ { "rank": 1, "device": { "slug": "rg35xxsp", "name": "RG35XXSP", ... }, "reason": "..." }, ... ],
+  "summary": "Here are our top compact Linux handheld picks...",
+  "matchCount": 21,          // consoles that matched the answers
+  "relaxed": ["battery"],    // answers loosened because nothing matched all of them
+  "rankedBy": "gemini"       // or "rules" when Gemini is unavailable
+}
+```
+
+The answers become normal search filters. If nothing matches, the least important answers are loosened in this
+order: battery, screen, OS, price. Gemini then picks the best 3 of the matches and writes the reasons. When a
+model is overloaded it moves on to the next one (`GEMINI_MODEL`, then `GEMINI_FALLBACK_MODELS`, by default
+`gemini-3.6-flash,gemini-3.1-flash-lite`). Without Gemini, the picks are the most capable consoles, cheapest
+first, with reasons written from their specs.
+
+### "Ask AI" chat: `POST /api/ai/chat`
+
+Send the whole conversation each time, oldest first, ending with the user's new message. The backend keeps no chat
+history, so the frontend holds it.
+
+```jsonc
+// Request
+{ "messages": [
+    { "role": "user", "content": "I want a handheld for retro games" },
+    { "role": "assistant", "content": "Which systems do you want to play?" },
+    { "role": "user", "content": "GBA and PS1, pocketable, under $80" }
+] }
+
+// Response
+{
+  "reply": "Here are three pocket-friendly picks under $80...",
+  "consoles": [ { "slug": "rg28xx", "name": "RG28XX", "startingPriceUsd": 48, ... }, ... ],  // 0-3 recommended
+  "answeredBy": "gemini"   // "unavailable" when Gemini is busy; the reply then says so politely
+}
+```
+
+Gemini gets a compact copy of the catalog, so it only talks about consoles in it, with their real prices and specs.
+When a request is vague it asks one follow-up question at a time: systems to play, form factor and size, budget.
+Limits: up to 20 messages of up to 1000 characters each.
+
+### My collection and price tracking: `POST /api/collection/summary`
+
+There are no accounts: each visitor's collection and watchlist are saved in their own browser, and the page sends
+them here to get today's prices. Nothing is stored on the server.
+
+```jsonc
+// Request
+{
+  "items":     [ { "slug": "rg35xxsp", "paidUsd": 65 }, { "slug": "miyoo-flip" } ],     // owned; paidUsd optional
+  "watchlist": [ { "slug": "odin-3-pro", "targetPriceUsd": 650 } ]                     // tracked; target optional
+}
+
+// Response
+{
+  "items": [ { "slug": "rg35xxsp", "device": {...}, "paidUsd": 65, "valueUsd": 55, "gainUsd": -10 }, ... ],
+  "totals": { "count": 2, "valueUsd": 105, "paidUsd": 65, "gainUsd": -10 },   // gain only over items with a price paid
+  "watchlist": [ { "slug": "odin-3-pro", "device": {...}, "targetPriceUsd": 650, "currentPriceUsd": 613,
+                   "belowTarget": true, "trend": "unknown", "trendPct": null, "isGoodDeal": false } ],
+  "alertCount": 1,          // tracked consoles at or below their target
+  "unknownSlugs": []        // saved consoles no longer in the catalog (the page removes them)
+}
+```
+
+A console's value is its typical price over the last 90 days. Up to 200 items and 200 tracked consoles.
+
 ### Errors
 
 When something goes wrong, the status code says what kind of problem it is, and the body explains it:
@@ -320,6 +403,7 @@ works without one on your own computer.
 | `CORS_ORIGINS` | `http://localhost:3000,http://localhost:5173` | Website addresses allowed to call the server directly |
 | `GEMINI_API_KEY` | none | Google Gemini key for AI recommendations. Without it, the AI endpoint does a plain search |
 | `GEMINI_MODEL` | `gemini-3.8-flash` | Which Gemini model to use |
+| `GEMINI_FALLBACK_MODELS` | `gemini-3.6-flash,gemini-3.1-flash-lite` | AI Builder: models to try when the main one is overloaded |
 
 The database (`data/retro.db`) and `.env` are not saved to git. Each person imports their own copy.
 

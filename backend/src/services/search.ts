@@ -50,6 +50,8 @@ export const deviceQuerySchema = z.object({
   hallSticks: bool.optional(),
   triggers: bool.optional(),
   batteryMin: num.min(0).optional(),
+  /** Minimum battery capacity in mAh */
+  batteryMahMin: num.min(0).optional(),
   wifi: bool.optional(),
   bluetooth: bool.optional(),
   videoOut: bool.optional(),
@@ -124,12 +126,13 @@ function buildFilters(query: DeviceQuery): Filter[] {
   if (aspect?.length) add((d) => aspect.includes(d.card.aspectRatio ?? ''), 'aspect');
   if (os?.length) add((d) => d.os.some((option) => os.includes(option.id)), 'os');
 
-  const { priceMin, priceMax, screenMin, screenMax, batteryMin, sticks } = query;
+  const { priceMin, priceMax, screenMin, screenMax, batteryMin, batteryMahMin, sticks } = query;
   if (priceMin !== undefined) add((d) => (priceOf(d) ?? -Infinity) >= priceMin);
   if (priceMax !== undefined) add((d) => (priceOf(d) ?? Infinity) <= priceMax);
   if (screenMin !== undefined) add((d) => (d.card.screenSizeIn ?? -Infinity) >= screenMin);
   if (screenMax !== undefined) add((d) => (d.card.screenSizeIn ?? Infinity) <= screenMax);
   if (batteryMin !== undefined) add((d) => (d.specs.batteryLifeHrs?.max ?? 0) >= batteryMin);
+  if (batteryMahMin !== undefined) add((d) => (d.specs.batteryMah ?? 0) >= batteryMahMin);
   if (sticks !== undefined) add((d) => (d.specs.controls?.analogSticks ?? 0) >= sticks);
 
   // Yes/no filters: "true" keeps devices that have it, "false" keeps devices that don't
