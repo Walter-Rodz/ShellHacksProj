@@ -173,13 +173,15 @@
     );
   opacity: 0.9;
 }
- 
+
 .cardImage {
-  height: 4.2rem;
-  width: 100%;
-  border-radius: 3px;
-  object-fit: cover;
-  display: block;
+    height: 12rem;
+    max-width: 100%;
+    border-radius: 3px;
+    object-fit: contain;
+    object-position: center;
+    display: block;
+    background: rgba(255,255,255,0.02);
 }
  
 .cardName {
