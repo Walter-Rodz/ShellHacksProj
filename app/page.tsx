@@ -1,5 +1,6 @@
 "use client";
  
+import Link from "next/link";
 import styles from "./page.module.css";
  
 type CollectionItem = {
@@ -31,15 +32,9 @@ export default function Home() {
             to the ones still on your list.
           </p>
  
-          <button
-            className={styles.cta}
-            type="button"
-            onClick={() => {
-              console.log("Start collection clicked");
-            }}
-          >
+          <Link href="/collection" className={styles.cta}>
             Start your collection
-          </button>
+          </Link>
         </main>
  
         <aside className={styles.preview} aria-label="Example collection preview">
