@@ -1,9 +1,9 @@
 "use client";
-
+ 
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
-
+ 
 type ConsoleItem = {
   id: string;
   name: string;
@@ -22,7 +22,7 @@ type ConsoleItem = {
   battery: string;
   charger: string;
 };
-
+ 
 const consoles: ConsoleItem[] = [
   {
     id: "anbernic-rg-ds",
@@ -185,7 +185,7 @@ const consoles: ConsoleItem[] = [
     charger: "USB-C",
   },
 ];
-
+ 
 type FilterKey =
   | "screenSize"
   | "cpu"
@@ -198,7 +198,7 @@ type FilterKey =
   | "tfCard"
   | "battery"
   | "charger";
-
+ 
 const FILTER_FIELDS: { key: FilterKey; label: string }[] = [
   { key: "screenSize", label: "Screen size" },
   { key: "cpu", label: "CPU" },
@@ -212,7 +212,7 @@ const FILTER_FIELDS: { key: FilterKey; label: string }[] = [
   { key: "battery", label: "Battery" },
   { key: "charger", label: "Charger" },
 ];
-
+ 
 const SPEC_ROWS: { key: FilterKey; label: string }[] = [
   { key: "screenSize", label: "Screen" },
   { key: "cpu", label: "CPU" },
@@ -226,26 +226,106 @@ const SPEC_ROWS: { key: FilterKey; label: string }[] = [
   { key: "battery", label: "Battery" },
   { key: "charger", label: "Charger" },
 ];
-
-const ALL = "All";
-
+ 
+const EMPTY_FILTERS: Record<FilterKey, string[]> = {
+  screenSize: [],
+  cpu: [],
+  gpu: [],
+  ram: [],
+  storage: [],
+  system: [],
+  games: [],
+  speaker: [],
+  tfCard: [],
+  battery: [],
+  charger: [],
+};
+ 
+/* ---------- AI Builder ---------- */
+ 
+type AiKey = "use" | "screen" | "os" | "battery";
+ 
+type AiAnswers = Record<AiKey, string>;
+ 
+const EMPTY_AI_ANSWERS: AiAnswers = { use: "", screen: "", os: "", battery: "" };
+ 
+const AI_QUESTIONS: {
+  key: AiKey;
+  label: string;
+  options: { value: string; label: string }[];
+}[] = [
+  {
+    key: "use",
+    label: "What do you mostly want to play?",
+    options: [
+      { value: "retro", label: "Classic retro (GB / GBA / PS1)" },
+      { value: "midrange", label: "Mid-era 3D (PS2 / GameCube / N64)" },
+      { value: "highend", label: "Modern / hybrid (Switch-level)" },
+    ],
+  },
+  {
+    key: "screen",
+    label: "Preferred screen size?",
+    options: [
+      { value: "compact", label: 'Compact (under 4")' },
+      { value: "medium", label: 'Medium (4" – 5.5")' },
+      { value: "large", label: 'Large (6"+)' },
+    ],
+  },
+  {
+    key: "os",
+    label: "OS preference?",
+    options: [
+      { value: "linux", label: "Linux (lightweight, open)" },
+      { value: "android", label: "Android (more apps & emulators)" },
+      { value: "any", label: "No preference" },
+    ],
+  },
+  {
+    key: "battery",
+    label: "Battery priority?",
+    options: [
+      { value: "long", label: "Long-lasting (5000mAh+)" },
+      { value: "standard", label: "Standard is fine" },
+    ],
+  },
+];
+ 
+function scoreConsole(c: ConsoleItem, answers: AiAnswers): number {
+  let score = 0;
+  const gamesLower = c.games.toLowerCase();
+ 
+  if (answers.use === "retro" && /gb|gbc|gba|snes|ps1|nds/.test(gamesLower)) score += 2;
+  if (answers.use === "midrange" && /ps2|gamecube|n64|dreamcast|wii/.test(gamesLower)) score += 2;
+  if (answers.use === "highend" && /switch|ps2|gamecube/.test(gamesLower)) score += 2;
+ 
+  const screenInches = parseFloat(c.screenSize);
+  if (answers.screen === "compact" && screenInches < 4) score += 1;
+  if (answers.screen === "medium" && screenInches >= 4 && screenInches < 6) score += 1;
+  if (answers.screen === "large" && screenInches >= 6) score += 1;
+ 
+  const systemLower = c.system.toLowerCase();
+  if (answers.os === "linux" && systemLower.includes("linux")) score += 1;
+  if (answers.os === "android" && systemLower.includes("android")) score += 1;
+  if (answers.os === "any") score += 0.5;
+ 
+  const mah = parseInt(c.battery, 10) || 0;
+  if (answers.battery === "long" && mah >= 5000) score += 1;
+  if (answers.battery === "standard" && mah < 5000) score += 1;
+ 
+  return score;
+}
+ 
 export default function CollectionPage() {
-  const [filters, setFilters] = useState<Record<FilterKey, string>>({
-    screenSize: ALL,
-    cpu: ALL,
-    gpu: ALL,
-    ram: ALL,
-    storage: ALL,
-    system: ALL,
-    games: ALL,
-    speaker: ALL,
-    tfCard: ALL,
-    battery: ALL,
-    charger: ALL,
-  });
-
+  const [filters, setFilters] = useState<Record<FilterKey, string[]>>(EMPTY_FILTERS);
+ 
   const [selectedId, setSelectedId] = useState<string | null>(null);
-
+  const [activeFilterTab, setActiveFilterTab] = useState<FilterKey>(FILTER_FIELDS[0].key);
+ 
+  const [aiModalOpen, setAiModalOpen] = useState(false);
+  const [aiAnswers, setAiAnswers] = useState<AiAnswers>(EMPTY_AI_ANSWERS);
+  const [aiResults, setAiResults] = useState<ConsoleItem[] | null>(null);
+ 
   const options = useMemo(() => {
     const result = {} as Record<FilterKey, string[]>;
     for (const { key } of FILTER_FIELDS) {
@@ -254,50 +334,69 @@ export default function CollectionPage() {
         consoles.forEach((c) =>
           c.games.split(",").forEach((g) => set.add(g.trim()))
         );
-        result[key] = [ALL, ...Array.from(set).sort()];
+        result[key] = Array.from(set).sort();
       } else {
         const set = new Set(consoles.map((c) => c[key]));
-        result[key] = [ALL, ...Array.from(set).sort()];
+        result[key] = Array.from(set).sort();
       }
     }
     return result;
   }, []);
-
+ 
+  const toggleFilterOption = (key: FilterKey, value: string) =>
+    setFilters((prev) => {
+      const current = prev[key];
+      const next = current.includes(value)
+        ? current.filter((v) => v !== value)
+        : [...current, value];
+      return { ...prev, [key]: next };
+    });
+ 
   const filtered = useMemo(() => {
     return consoles.filter((c) =>
       FILTER_FIELDS.every(({ key }) => {
-        const value = filters[key];
-        if (value === ALL) return true;
+        const selected = filters[key];
+        if (selected.length === 0) return true;
         if (key === "games") {
-          return c.games.toLowerCase().includes(value.toLowerCase());
+          const consoleGames = c.games.split(",").map((g) => g.trim().toLowerCase());
+          return selected.some((v) => consoleGames.includes(v.toLowerCase()));
         }
-        return c[key] === value;
+        return selected.includes(c[key]);
       })
     );
   }, [filters]);
-
-  const resetFilters = () =>
-    setFilters({
-      screenSize: ALL,
-      cpu: ALL,
-      gpu: ALL,
-      ram: ALL,
-      storage: ALL,
-      system: ALL,
-      games: ALL,
-      speaker: ALL,
-      tfCard: ALL,
-      battery: ALL,
-      charger: ALL,
-    });
-
-  const activeCount = Object.values(filters).filter((v) => v !== ALL).length;
+ 
+  const resetFilters = () => setFilters(EMPTY_FILTERS);
+ 
+  const activeCount = Object.values(filters).reduce((sum, arr) => sum + arr.length, 0);
   const selected = consoles.find((c) => c.id === selectedId) ?? null;
-
+ 
+  const displayList = aiResults ?? filtered;
+ 
+  const allAiAnswered = AI_QUESTIONS.every((q) => aiAnswers[q.key] !== "");
+ 
+  const handleAiAnswer = (key: AiKey, value: string) =>
+    setAiAnswers((prev) => ({ ...prev, [key]: value }));
+ 
+  const handleAiSubmit = () => {
+    const scored = consoles
+      .map((c) => ({ c, score: scoreConsole(c, aiAnswers) }))
+      .sort((a, b) => b.score - a.score);
+    const top = scored.slice(0, 4).map((s) => s.c);
+    setAiResults(top);
+    setSelectedId(top[0]?.id ?? null);
+    setAiModalOpen(false);
+  };
+ 
+  const clearAiResults = () => {
+    setAiResults(null);
+    setAiAnswers(EMPTY_AI_ANSWERS);
+  };
+ 
   return (
     <div className={styles.page}>
       <div className={styles.backdrop} aria-hidden="true" />
-
+ 
       <div className={styles.shell}>
         <header className={styles.header}>
           <Link href="/" className={styles.backLink}>
@@ -308,49 +407,87 @@ export default function CollectionPage() {
             Filter by spec to find the handhelds that fit your setup.
           </p>
         </header>
-
-        <div className={styles.filterBar}>
-          <div className={styles.filterGrid}>
-            {FILTER_FIELDS.map(({ key, label }) => (
-              <label className={styles.filterField} key={key}>
-                <span className={styles.filterLabel}>{label}</span>
-                <select
-                  className={styles.filterSelect}
-                  value={filters[key]}
-                  onChange={(e) =>
-                    setFilters((prev) => ({ ...prev, [key]: e.target.value }))
-                  }
+ 
+        <div className={styles.topRow}>
+          <div className={styles.filterBar}>
+            <div className={styles.filterTabs}>
+              {FILTER_FIELDS.map(({ key, label }) => (
+                <button
+                  type="button"
+                  key={key}
+                  className={`${styles.filterTab} ${
+                    activeFilterTab === key ? styles.filterTabActive : ""
+                  }`}
+                  onClick={() => setActiveFilterTab(key)}
+                  aria-pressed={activeFilterTab === key}
                 >
-                  {options[key].map((opt) => (
-                    <option value={opt} key={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            ))}
+                  {label}
+                  {filters[key].length > 0 && (
+                    <span className={styles.filterTabCount}>{filters[key].length}</span>
+                  )}
+                </button>
+              ))}
+            </div>
+ 
+            <div className={styles.checklist}>
+              {options[activeFilterTab].map((opt) => (
+                <label className={styles.checkItem} key={opt}>
+                  <input
+                    type="checkbox"
+                    checked={filters[activeFilterTab].includes(opt)}
+                    onChange={() => toggleFilterOption(activeFilterTab, opt)}
+                  />
+                  <span>{opt}</span>
+                </label>
+              ))}
+            </div>
+ 
+            <div className={styles.filterFooter}>
+              <span className={styles.resultCount}>
+                {filtered.length} of {consoles.length} consoles
+                {activeCount > 0 ? ` · ${activeCount} selection${activeCount > 1 ? "s" : ""} active` : ""}
+              </span>
+              <button
+                type="button"
+                className={styles.resetButton}
+                onClick={resetFilters}
+                disabled={activeCount === 0}
+              >
+                Reset filters
+              </button>
+            </div>
           </div>
-
-          <div className={styles.filterFooter}>
-            <span className={styles.resultCount}>
-              {filtered.length} of {consoles.length} consoles
-              {activeCount > 0 ? ` · ${activeCount} filter${activeCount > 1 ? "s" : ""} active` : ""}
-            </span>
+ 
+          <div className={styles.aiBuilderCard}>
+            <p className={styles.aiBuilderTitle}>
+              <span className={styles.aiBuilderSpark} aria-hidden="true">✦</span> AI Builder
+            </p>
+            <p className={styles.aiBuilderDesc}>
+              Answer a few quick questions and get matched to the right handheld.
+            </p>
             <button
               type="button"
-              className={styles.resetButton}
-              onClick={resetFilters}
-              disabled={activeCount === 0}
+              className={styles.aiBuilderButton}
+              onClick={() => setAiModalOpen(true)}
             >
-              Reset filters
+              Launch AI Builder
             </button>
           </div>
         </div>
-
+ 
+        {aiResults && (
+          <div className={styles.aiResultsBanner}>
+            <span>AI-suggested picks based on your answers ({aiResults.length})</span>
+            <button type="button" className={styles.aiClearButton} onClick={clearAiResults}>
+              Clear suggestions
+            </button>
+          </div>
+        )}
+ 
         <div className={styles.browseRow}>
           <div className={styles.gridPanel}>
             <div className={styles.grid}>
-              {filtered.map((c) => (
+              {displayList.map((c) => (
                 <button
                   type="button"
                   className={`${styles.card} ${c.id === selectedId ? styles.cardSelected : ""}`}
@@ -371,15 +508,15 @@ export default function CollectionPage() {
                   <p className={styles.cardName}>{c.name}</p>
                 </button>
               ))}
-
-              {filtered.length === 0 && (
+ 
+              {displayList.length === 0 && (
                 <p className={styles.empty}>
                   No consoles match these filters. Try resetting one or two.
                 </p>
               )}
             </div>
           </div>
-
+ 
           <aside className={styles.detailPanel} aria-label="Console details">
             {selected ? (
               <>
@@ -418,6 +555,76 @@ export default function CollectionPage() {
           </aside>
         </div>
       </div>
+ 
+      {aiModalOpen && (
+        <div
+          className={styles.modalOverlay}
+          onClick={() => setAiModalOpen(false)}
+        >
+          <div
+            className={styles.modalCard}
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="ai-builder-title"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className={styles.modalHeader}>
+              <div>
+                <h2 id="ai-builder-title" className={styles.modalTitle}>
+                  AI Builder
+                </h2>
+                <p className={styles.modalSubtitle}>
+                  A few quick questions, then we&apos;ll surface your best matches.
+                </p>
+              </div>
+              <button
+                type="button"
+                className={styles.modalClose}
+                onClick={() => setAiModalOpen(false)}
+                aria-label="Close"
+              >
+                &times;
+              </button>
+            </div>
+ 
+            {AI_QUESTIONS.map((q) => (
+              <div className={styles.questionBlock} key={q.key}>
+                <span className={styles.questionLabel}>{q.label}</span>
+                {q.options.map((opt) => (
+                  <label className={styles.optionRow} key={opt.value}>
+                    <input
+                      type="radio"
+                      name={q.key}
+                      value={opt.value}
+                      checked={aiAnswers[q.key] === opt.value}
+                      onChange={() => handleAiAnswer(q.key, opt.value)}
+                    />
+                    {opt.label}
+                  </label>
+                ))}
+              </div>
+            ))}
+ 
+            <div className={styles.modalFooter}>
+              <button
+                type="button"
+                className={styles.modalSecondary}
+                onClick={() => setAiModalOpen(false)}
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                className={styles.modalPrimary}
+                onClick={handleAiSubmit}
+                disabled={!allAiAnswered}
+              >
+                Show my matches
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
