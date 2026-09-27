@@ -51,5 +51,9 @@ NEXT_PUBLIC_API_URL=https://your-backend-address
 
 Then restart `npm run dev`. The backend must allow the site's address in its `CORS_ORIGINS` setting.
 
+**On Vercel:** set `NEXT_PUBLIC_API_URL` in the project's **Settings → Environment Variables** to the hosted backend
+(e.g. `https://api.yourdomain.com`), then redeploy. The value is built into the site, so it only takes effect on a
+new deployment. See "Deploying" in `backend/README.md` on the `Backend` branch for hosting the backend on Render.
+
 Console photos live in `public/images/consoles/`. `app/lib/consoleImages.ts` maps each console (by its backend
 `slug`) to its photo file; consoles without an entry show `Placeholder.png`.
