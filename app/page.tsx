@@ -11,7 +11,7 @@ type CollectionItem = {
 const exampleItems: CollectionItem[] = [
   { name: "ANBERNIC RG-Ds", image: "/images/consoles/anbernic-rg-ds.png" },
   { name: "Odin 3 Pro", image: "/images/consoles/odin-3-pro.png" },
-  { name: "Miyoo Flip", image: "/images/consoles/Miyoo flip.png" },
+  { name: "Miyoo Flip", image: "/images/consoles/miyoo-flip.png" },
   { name: "Retroid Pocket 5", image: "/images/consoles/retroid-pocket-5.png" },
 ];
  
@@ -27,7 +27,9 @@ export default function Home() {
           </h1>
  
           <p className={styles.lede}>
-            Find the perfect emulator console for your collection, see what it&rsquo;s actually worth, find out its specs, what games it can play, and track the collection you&rsquo;ve built.
+            Look up any console, see what it&rsquo;s actually worth, and track
+            the collection you&rsquo;ve built &mdash; from launch-day classics
+            to the ones still on your list.
           </p>
  
           <Link href="/collection" className={styles.cta}>
