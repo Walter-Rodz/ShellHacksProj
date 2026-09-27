@@ -1,0 +1,847 @@
+.backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  background: var(--void);
+}
+ 
+.page {
+  position: relative;
+  min-height: 100dvh;
+}
+ 
+.shell {
+  position: relative;
+  z-index: 1;
+  max-width: 82rem;
+  margin: 0 auto;
+  padding: 6vh 6vw 8vh;
+}
+ 
+/* ---------- header ---------- */
+ 
+.header {
+  margin-bottom: 2rem;
+}
+ 
+.backLink {
+  display: inline-block;
+  font-size: 0.85rem;
+  color: #9a86c9;
+  text-decoration: none;
+  margin-bottom: 1rem;
+}
+ 
+.backLink:hover {
+  color: var(--lime);
+}
+ 
+.title {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: clamp(1.6rem, 4vw, 2.4rem);
+  color: var(--pink);
+  margin: 0 0 0.5rem 0;
+}
+ 
+.subtitle {
+  margin: 0;
+  color: #cdbdf0;
+  font-size: 1rem;
+}
+ 
+/* ---------- top row: filter bar (left, shrunk) + AI builder (right, own box) ---------- */
+ 
+.topRow {
+  display: flex;
+  align-items: flex-start;
+  gap: 1.3rem;
+  margin-bottom: 2rem;
+}
+ 
+/* ---------- filter bar ---------- */
+ 
+.filterBar {
+  flex: 1 1 auto;
+  min-width: 0;
+  max-width: 46rem;
+  border: 1px solid rgba(234, 144, 16, 0.35);
+  background: linear-gradient(160deg, rgba(237, 28, 36, 0.15), rgba(14, 15, 25, 0.85));
+  border-radius: 6px;
+  padding: 1.2rem;
+}
+ 
+.filterTabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+  margin-bottom: 0.9rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px dashed rgba(243, 243, 243, 0.15);
+}
+ 
+.filterTab {
+  appearance: none;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid rgba(243, 243, 243, 0.15);
+  background: rgba(14, 15, 25, 0.5);
+  color: #cdbdf0;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 0.42rem 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease, background 150ms ease;
+}
+ 
+.filterTab:hover {
+  border-color: rgba(255, 213, 0, 0.4);
+  color: #e7d9ff;
+}
+ 
+.filterTabActive {
+  border-color: var(--pink);
+  background: rgba(237, 28, 36, 0.28);
+  color: #e7d9ff;
+}
+ 
+.filterTabCount {
+  background: var(--lime);
+  color: #0e0f19;
+  font-size: 0.63rem;
+  font-weight: 700;
+  line-height: 1;
+  border-radius: 999px;
+  padding: 0.15rem 0.4rem;
+}
+ 
+.checklist {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(8.5rem, 1fr));
+  gap: 0.4rem 0.9rem;
+  max-height: 9rem;
+  overflow-y: auto;
+  padding-right: 0.3rem;
+}
+ 
+.checklist::-webkit-scrollbar {
+  width: 5px;
+}
+ 
+.checklist::-webkit-scrollbar-thumb {
+  background: rgba(234, 144, 16, 0.4);
+  border-radius: 3px;
+}
+ 
+.checkItem {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  font-size: 0.78rem;
+  color: #e7d9ff;
+  cursor: pointer;
+}
+ 
+.checkItem input {
+  flex: none;
+  width: 0.85rem;
+  height: 0.85rem;
+  accent-color: var(--pink);
+  cursor: pointer;
+}
+ 
+.filterFooter {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-top: 1.2rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(243, 243, 243, 0.15);
+  flex-wrap: wrap;
+}
+ 
+.resultCount {
+  font-size: 0.82rem;
+  color: #9a86c9;
+}
+ 
+.resetButton {
+  appearance: none;
+  border: 1px solid rgba(243, 243, 243, 0.3);
+  background: transparent;
+  color: var(--lime);
+  font-size: 0.8rem;
+  font-weight: 600;
+  padding: 0.5rem 1rem;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: border-color 150ms ease, color 150ms ease;
+}
+ 
+.resetButton:hover:not(:disabled) {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+ 
+.resetButton:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+ 
+/* ---------- AI builder card (own box, next to the filter bar) ---------- */
+ 
+.aiBuilderCard {
+  flex: 0 0 13rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  border: 1px solid rgba(190, 255, 0, 0.35);
+  background: linear-gradient(160deg, rgba(185, 21, 204, 0.22), rgba(14, 15, 25, 0.9));
+  border-radius: 6px;
+  padding: 0.85rem 0.95rem;
+  box-shadow: 0 16px 32px -20px rgba(185, 21, 204, 0.55);
+}
+ 
+.aiBuilderTitle {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-display), sans-serif;
+  font-weight: 700;
+  font-size: 0.92rem;
+  letter-spacing: 0.02em;
+  color: var(--lime);
+  margin: 0;
+}
+ 
+.aiBuilderSpark {
+  color: var(--pink);
+}
+ 
+.aiBuilderDesc {
+  font-size: 0.74rem;
+  line-height: 1.4;
+  color: #cdbdf0;
+  margin: 0;
+}
+ 
+.aiBuilderButton {
+  appearance: none;
+  border: none;
+  border-radius: 4px;
+  padding: 0.6rem 1rem;
+  margin-top: 0.15rem;
+  font-weight: 700;
+  font-size: 0.8rem;
+  letter-spacing: 0.01em;
+  color: #0e0f19;
+  background: linear-gradient(120deg, var(--lime), var(--pink));
+  background-size: 160% 160%;
+  background-position: 0% 50%;
+  box-shadow: 0 10px 24px -10px rgba(185, 21, 204, 0.65);
+  cursor: pointer;
+  transition: background-position 200ms ease, transform 150ms ease, box-shadow 150ms ease;
+}
+ 
+.aiBuilderButton:hover {
+  background-position: 100% 50%;
+  transform: translateY(-1px);
+  box-shadow: 0 14px 28px -10px rgba(185, 21, 204, 0.8);
+}
+ 
+.aiBuilderButton:active {
+  transform: translateY(0);
+}
+ 
+/* ---------- AI results banner ---------- */
+ 
+.aiResultsBanner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  padding: 0.7rem 1rem;
+  border: 1px solid var(--lime);
+  border-radius: 4px;
+  background: rgba(190, 255, 0, 0.08);
+  font-size: 0.82rem;
+  color: var(--lime);
+}
+ 
+.aiBannerText {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  min-width: 0;
+  flex: 1 1 auto;
+}
+ 
+.aiAnswersPreview {
+  display: block;
+  max-width: 100%;
+  overflow-x: auto;
+  white-space: nowrap;
+  font-family: ui-monospace, "SFMono-Regular", Menlo, monospace;
+  font-size: 0.7rem;
+  color: #cdbdf0;
+  background: rgba(14, 15, 25, 0.5);
+  border: 1px solid rgba(243, 243, 243, 0.12);
+  border-radius: 3px;
+  padding: 0.35rem 0.55rem;
+}
+ 
+.aiAnswersPreview::-webkit-scrollbar {
+  height: 4px;
+}
+ 
+.aiAnswersPreview::-webkit-scrollbar-thumb {
+  background: rgba(234, 144, 16, 0.4);
+  border-radius: 3px;
+}
+ 
+.aiClearButton {
+  appearance: none;
+  border: 1px solid var(--lime);
+  background: transparent;
+  color: var(--lime);
+  font-size: 0.75rem;
+  padding: 0.35rem 0.7rem;
+  border-radius: 3px;
+  cursor: pointer;
+}
+ 
+.aiClearButton:hover {
+  background: var(--lime);
+  color: #0e0f19;
+}
+ 
+/* ---------- browse row: grid (left) + detail panel (right) ---------- */
+ 
+.browseRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 19rem;
+  gap: 1.5rem;
+  align-items: start;
+}
+ 
+.gridPanel {
+  border: 1px solid rgba(234, 144, 16, 0.35);
+  background: linear-gradient(160deg, rgba(237, 28, 36, 0.65), rgba(14, 15, 25, 0.85));
+  border-radius: 6px;
+  padding: 1.2rem;
+  box-shadow: 0 30px 60px -25px rgba(234, 144, 16, 0.45);
+  backdrop-filter: blur(2px);
+ 
+  /* Scrolls internally so the page itself doesn't need to scroll for the grid. */
+  max-height: 62vh;
+  overflow-y: auto;
+}
+ 
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(9.5rem, 1fr));
+  gap: 0.9rem;
+}
+ 
+.card {
+  appearance: none;
+  border: 1px solid rgba(243, 243, 243, 0.1);
+  background: rgba(14, 15, 25, 0.55);
+  border-radius: 4px;
+  padding: 0.9rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  cursor: pointer;
+  text-align: left;
+  transition: border-color 150ms ease, transform 150ms ease;
+}
+ 
+.card:hover {
+  border-color: rgba(255, 213, 0, 0.4);
+  transform: translateY(-2px);
+}
+ 
+.card:focus-visible {
+  outline: 2px solid var(--pink);
+  outline-offset: 2px;
+}
+ 
+.cardSelected {
+  border-color: var(--pink);
+  box-shadow: 0 0 0 1px rgba(255, 213, 0, 0.4);
+}
+ 
+.cardArt {
+  height: 4.2rem;
+  border-radius: 3px;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      var(--art-a, var(--purple)) 0px,
+      var(--art-a, var(--purple)) 8px,
+      var(--art-b, var(--indigo)) 8px,
+      var(--art-b, var(--indigo)) 16px
+    );
+  opacity: 0.9;
+}
+ 
+.cardImage {
+  height: 4.2rem;
+  width: 100%;
+  border-radius: 3px;
+  object-fit: contain;
+  background: rgba(14, 15, 25, 0.4);
+  display: block;
+}
+ 
+.cardName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e7d9ff;
+  margin: 0;
+}
+ 
+.empty {
+  grid-column: 1 / -1;
+  text-align: center;
+  color: #9a86c9;
+  padding: 3rem 1rem;
+}
+ 
+/* ---------- detail panel ---------- */
+ 
+.detailPanel {
+  border: 1px solid rgba(234, 144, 16, 0.35);
+  background: linear-gradient(160deg, rgba(237, 28, 36, 0.65), rgba(14, 15, 25, 0.85));
+  border-radius: 6px;
+  padding: 1.2rem;
+  box-shadow: 0 30px 60px -25px rgba(234, 144, 16, 0.45);
+  backdrop-filter: blur(2px);
+  position: sticky;
+  top: 2rem;
+  max-height: 62vh;
+  overflow-y: auto;
+}
+ 
+.detailImage {
+  width: 100%;
+  height: 10rem;
+  object-fit: contain;
+  background: rgba(14, 15, 25, 0.4);
+  border-radius: 4px;
+  display: block;
+  margin-bottom: 0.9rem;
+}
+ 
+.detailArt {
+  width: 100%;
+  height: 10rem;
+  border-radius: 4px;
+  margin-bottom: 0.9rem;
+  background:
+    repeating-linear-gradient(
+      45deg,
+      var(--art-a, var(--purple)) 0px,
+      var(--art-a, var(--purple)) 8px,
+      var(--art-b, var(--indigo)) 8px,
+      var(--art-b, var(--indigo)) 16px
+    );
+  opacity: 0.9;
+}
+ 
+.detailName {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--pink);
+  margin: 0 0 0.4rem 0;
+}
+ 
+.detailPrice {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--lime);
+  margin: 0 0 0.9rem 0;
+}
+ 
+.detailEmpty {
+  color: #9a86c9;
+  font-size: 0.85rem;
+  text-align: center;
+  padding: 2rem 0.5rem;
+}
+ 
+.specList {
+  margin: 0;
+  display: grid;
+  gap: 0.5rem;
+}
+ 
+.specRow {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 0.75rem;
+  font-size: 0.8rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px dashed rgba(243, 243, 243, 0.1);
+}
+ 
+.specRow dt {
+  color: #9a86c9;
+  flex: none;
+}
+ 
+.specRow dd {
+  margin: 0;
+  color: #e7d9ff;
+  text-align: right;
+}
+ 
+/* ---------- AI builder modal ---------- */
+ 
+.modalOverlay {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  background: rgba(5, 3, 10, 0.75);
+  backdrop-filter: blur(3px);
+}
+ 
+.modalCard {
+  width: min(32rem, 100%);
+  max-height: 85vh;
+  overflow-y: auto;
+  border: 1px solid rgba(234, 144, 16, 0.4);
+  border-radius: 8px;
+  padding: 1.6rem;
+  background: linear-gradient(160deg, rgba(33, 4, 86, 0.95), rgba(14, 15, 25, 0.98));
+  box-shadow: 0 40px 80px -30px rgba(185, 21, 204, 0.6);
+}
+ 
+.modalHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+ 
+.modalTitle {
+  font-family: var(--font-display), sans-serif;
+  font-size: 1.2rem;
+  color: var(--pink);
+  margin: 0;
+}
+ 
+.modalSubtitle {
+  font-size: 0.8rem;
+  color: #9a86c9;
+  margin: 0.3rem 0 0;
+}
+ 
+.modalClose {
+  appearance: none;
+  border: none;
+  background: transparent;
+  color: #cdbdf0;
+  font-size: 1.4rem;
+  line-height: 1;
+  cursor: pointer;
+}
+ 
+.modalClose:hover {
+  color: var(--pink);
+}
+ 
+.progressWrap {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  margin-bottom: 1.2rem;
+}
+ 
+.progressTrack {
+  flex: 1 1 auto;
+  height: 0.35rem;
+  border-radius: 999px;
+  background: rgba(243, 243, 243, 0.12);
+  overflow: hidden;
+}
+ 
+.progressFill {
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(120deg, var(--lime), var(--pink));
+  transition: width 220ms ease;
+}
+ 
+.progressLabel {
+  flex: none;
+  font-size: 0.7rem;
+  letter-spacing: 0.03em;
+  color: #9a86c9;
+  white-space: nowrap;
+}
+ 
+.questionBlock {
+  margin-bottom: 1.3rem;
+}
+ 
+.questionLabel {
+  display: block;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #e7d9ff;
+  margin-bottom: 0.6rem;
+}
+ 
+.optionRow {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.4rem 0;
+  font-size: 0.82rem;
+  color: #cdbdf0;
+  cursor: pointer;
+}
+ 
+.optionRow input {
+  accent-color: var(--pink);
+}
+ 
+.priceSlider {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 0.4rem 0 0.2rem;
+}
+ 
+.priceSlider input[type="range"] {
+  width: 100%;
+  accent-color: var(--pink);
+  cursor: pointer;
+}
+ 
+.priceScale {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  color: #9a86c9;
+}
+ 
+.priceValue {
+  font-family: var(--font-display), sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--lime);
+}
+ 
+.modalFooter {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.7rem;
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px dashed rgba(243, 243, 243, 0.15);
+}
+ 
+.modalSecondary {
+  appearance: none;
+  border: 1px solid rgba(243, 243, 243, 0.3);
+  background: transparent;
+  color: #cdbdf0;
+  font-size: 0.82rem;
+  padding: 0.55rem 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+ 
+.modalSecondary:hover {
+  border-color: var(--pink);
+  color: var(--pink);
+}
+ 
+.modalPrimary {
+  appearance: none;
+  border: none;
+  background: var(--lime);
+  color: #0e0f19;
+  font-weight: 700;
+  font-size: 0.82rem;
+  padding: 0.55rem 1.1rem;
+  border-radius: 4px;
+  cursor: pointer;
+}
+ 
+.modalPrimary:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+ 
+/* ---------- responsive ---------- */
+ 
+@media (max-width: 760px) {
+  .topRow {
+    flex-direction: column;
+  }
+ 
+  .filterBar {
+    max-width: none;
+  }
+}
+ 
+@media (max-width: 900px) {
+  .browseRow {
+    grid-template-columns: 1fr;
+  }
+ 
+  .detailPanel {
+    position: static;
+    max-height: none;
+  }
+}
+ 
+@media (max-width: 480px) {
+  .filterFooter {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+}
+/* ---------- AI Builder results (connected to the backend) ---------- */
+.aiResults {
+  margin: 16px 0;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(185, 21, 204, 0.4);
+  background: rgba(33, 4, 86, 0.55);
+}
+
+.aiResultsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.aiResultsSummary {
+  margin: 8px 0 12px;
+  line-height: 1.5;
+}
+
+.aiResultsNote {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.aiPickList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aiPick {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.aiPick:hover {
+  border-color: rgba(185, 21, 204, 0.8);
+}
+
+.aiPickName {
+  font-weight: 600;
+}
+
+.aiPickPrice {
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.aiPickReason {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+.aiResultsFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-top: 8px;
+}
+
+.aiShowAllButton {
+  padding: 8px 14px;
+  border: 1px solid rgba(185, 21, 204, 0.8);
+  border-radius: 999px;
+  background: rgba(185, 21, 204, 0.25);
+  color: inherit;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.aiShowAllButton:hover {
+  background: rgba(185, 21, 204, 0.4);
+}
+
+.aiGridNotice {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.aiLinkButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- Link to My collection (header) ---------- */
+.myCollectionLink {
+  justify-self: end;
+  float: right;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--pink);
+  border-radius: 999px;
+  color: var(--pink);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.myCollectionLink:hover {
+  background: rgba(255, 213, 0, 0.1);
+}

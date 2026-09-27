@@ -1,0 +1,27 @@
+:root {
+  --void: #0E0F19;
+  --indigo: #ED1C24;
+  --purple: #EA9010;
+  --pink: #FFD500;
+  --lime: #F3F3F3;
+ 
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+ 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+ 
+html,
+body {
+  height: 100%;
+  margin: 0;
+  background: var(--void);
+  color: #e7d9ff;
+  font-family: var(--font-body), system-ui, sans-serif;
+  scroll-padding-top: env(safe-area-inset-top, 0px);
+}

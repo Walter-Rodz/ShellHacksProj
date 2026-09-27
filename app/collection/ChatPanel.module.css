@@ -1,0 +1,188 @@
+/* "Ask AI" chat: a corner button that opens a chat window */
+
+.launcher {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  padding: 0.8rem 1.2rem;
+  border: none;
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.9rem;
+  color: #0e0f19;
+  background: linear-gradient(120deg, var(--lime), var(--pink));
+  box-shadow: 0 12px 28px -10px rgba(185, 21, 204, 0.8);
+  cursor: pointer;
+}
+
+.launcher:hover {
+  transform: translateY(-1px);
+}
+
+.panel {
+  position: fixed;
+  right: 24px;
+  bottom: 24px;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  width: min(380px, calc(100vw - 32px));
+  height: min(560px, calc(100vh - 48px));
+  border: 1px solid rgba(185, 21, 204, 0.5);
+  border-radius: 16px;
+  background: #140a2e;
+  box-shadow: 0 24px 60px -20px rgba(0, 0, 0, 0.8);
+  overflow: hidden;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.title {
+  font-weight: 700;
+}
+
+.headerButtons {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.textButton,
+.close {
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  opacity: 0.8;
+}
+
+.textButton {
+  font-size: 0.8rem;
+  text-decoration: underline;
+}
+
+.textButton:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+.close {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.messages {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  padding: 1rem;
+  overflow-y: auto;
+}
+
+.userMessage,
+.aiMessage {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  max-width: 85%;
+}
+
+.userMessage {
+  align-self: flex-end;
+  align-items: flex-end;
+}
+
+.aiMessage {
+  align-self: flex-start;
+}
+
+.bubble {
+  margin: 0;
+  padding: 0.6rem 0.8rem;
+  border-radius: 12px;
+  font-size: 0.9rem;
+  line-height: 1.45;
+  white-space: pre-wrap;
+}
+
+.userMessage .bubble {
+  color: #0e0f19;
+  background: linear-gradient(120deg, var(--lime), var(--pink));
+}
+
+.aiMessage .bubble {
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.typing {
+  opacity: 0.7;
+  font-style: italic;
+}
+
+.consoles {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.consoleChip {
+  padding: 0.35rem 0.7rem;
+  border: 1px solid rgba(185, 21, 204, 0.7);
+  border-radius: 999px;
+  background: rgba(185, 21, 204, 0.2);
+  color: inherit;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+}
+
+.consoleChip:hover {
+  background: rgba(185, 21, 204, 0.4);
+}
+
+.chipPrice {
+  opacity: 0.8;
+}
+
+.inputRow {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.input {
+  flex: 1;
+  min-width: 0;
+  padding: 0.6rem 0.8rem;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.05);
+  color: inherit;
+  font: inherit;
+  font-size: 0.9rem;
+}
+
+.send {
+  padding: 0 1rem;
+  border: none;
+  border-radius: 10px;
+  font-weight: 700;
+  color: #0e0f19;
+  background: linear-gradient(120deg, var(--lime), var(--pink));
+  cursor: pointer;
+}
+
+.send:disabled {
+  opacity: 0.4;
+  cursor: default;
+}

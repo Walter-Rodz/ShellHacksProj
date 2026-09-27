@@ -1,0 +1,57 @@
+.actions {
+  display: grid;
+  gap: 0.5rem;
+  margin: 0.25rem 0 1rem;
+}
+
+.buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.primary,
+.secondary,
+.secondaryActive {
+  padding: 0.55rem 0.9rem;
+  border-radius: 6px;
+  font: inherit;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.primary {
+  border: none;
+  color: #0e0f19;
+  background: linear-gradient(120deg, var(--lime), var(--pink));
+}
+
+.secondary {
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  color: inherit;
+  background: none;
+}
+
+.secondaryActive {
+  border: 1px solid var(--pink);
+  color: var(--pink);
+  background: rgba(255, 213, 0, 0.08);
+}
+
+.primary:hover,
+.secondary:hover {
+  transform: translateY(-1px);
+}
+
+.status {
+  margin: 0;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  opacity: 0.85;
+}
+
+.link {
+  color: var(--pink);
+  text-decoration: underline;
+}
