@@ -3,8 +3,8 @@ const nextConfig = {
   images: {
     unoptimized: true
   },
-  basePath: '/your-repo-name',
-  assetPrefix: '/your-repo-name/',
+  basePath: '/ShellHacksProj',
+  assetPrefix: '/ShellHacksProj/',
 };
 
 module.exports = nextConfig;
