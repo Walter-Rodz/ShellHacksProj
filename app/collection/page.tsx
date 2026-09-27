@@ -1,201 +1,17 @@
 "use client";
  
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import styles from "./page.module.css";
- 
-type ConsoleItem = {
-  id: string;
-  name: string;
-  image?: string;
-  a?: string;
-  b?: string;
-  screenSize: string;
-  cpu: string;
-  gpu: string;
-  ram: string;
-  storage: string;
-  system: string;
-  games: string;
-  speaker: string;
-  tfCard: string;
-  battery: string;
-  charger: string;
-  price: number;
-};
- 
-const consoles: ConsoleItem[] = [
-  {
-    id: "anbernic-rg-ds",
-    name: "ANBERNIC RG-DS",
-    image: "/images/consoles/anbernic-rg-ds.png",
-    screenSize: '4" Dual Screen',
-    cpu: "RK3568 Quad-core 64-bit Cortex-A55",
-    gpu: "ARM G52 2EE",
-    ram: "3GB",
-    storage: "32GB",
-    system: "Linux / Android",
-    games: "GBA, NDS, PS1",
-    speaker: "Dual Stereo",
-    tfCard: "Dual TF Slots",
-    battery: "4000mAh",
-    charger: "5V/2A",
-    price: 199,
-  },
-  {
-    id: "odin-3-pro",
-    name: "Odin 3 Pro",
-    image: "/images/consoles/odin-3-pro.png",
-    screenSize: '6.0"',
-    cpu: "Snapdragon 8 Gen 3",
-    gpu: "Adreno 750",
-    ram: "16GB",
-    storage: "512GB",
-    system: "Android 14",
-    games: "PS2, GameCube, Switch",
-    speaker: "Stereo",
-    tfCard: "MicroSD",
-    battery: "8000mAh",
-    charger: "65W Quick Charge",
-    price: 499,
-  },
-  {
-    id: "miyoo-flip",
-    name: "Miyoo Flip",
-    image: "/images/consoles/miyoo-flip.png",
-    screenSize: '3.5" 640x480',
-    cpu: "RK3566 Quad-Core 1.8GHz",
-    gpu: "Mali-G52",
-    ram: "1GB",
-    storage: "64GB",
-    system: "Linux",
-    games: "GB, GBC, GBA, SNES, PS1, N64, Dreamcast, PSP",
-    speaker: "Stereo",
-    tfCard: "Dual MicroSD Slots",
-    battery: "3000mAh",
-    charger: "USB-C",
-    price: 149,
-  },
-  {
-    id: "retroid-pocket-5",
-    name: "Retroid Pocket 5",
-    image: "/images/consoles/retroid-pocket-5.png",
-    screenSize: '5.5"',
-    cpu: "Snapdragon 865",
-    gpu: "Adreno 650",
-    ram: "8GB",
-    storage: "128GB",
-    system: "Android 13",
-    games: "PS2, GameCube, N64, Wii, Switch, 3DS",
-    speaker: "Stereo",
-    tfCard: "MicroSD",
-    battery: "6000mAh",
-    charger: "USB-C",
-    price: 299,
-  },
-  {
-    id: "rg35xx-plus",
-    name: "Anbernic RG35XX Plus",
-    image: "/images/consoles/rg35xx-plus.png",
-    screenSize: '3.5"',
-    cpu: "H700 Quad-core ARM",
-    gpu: "Mali-G31",
-    ram: "1GB",
-    storage: "64GB",
-    system: "Linux",
-    games: "GBA, PS1, SNES",
-    speaker: "Mono",
-    tfCard: "Dual TF Slots",
-    battery: "3500mAh",
-    charger: "USB-C",
-    price: 129,
-  },
-  {
-    id: "rgb30",
-    name: "Powkiddy RGB30",
-    image: "/images/consoles/rgb30.png",
-    screenSize: '4.0"',
-    cpu: "RK3566",
-    gpu: "Mali-G52",
-    ram: "4GB",
-    storage: "18GB",
-    system: "Linux / Android",
-    games: "PS1, N64, Dreamcast",
-    speaker: "Dual Stereo",
-    tfCard: "Dual TF Slots",
-    battery: "4100mAh",
-    charger: "USB-C",
-    price: 179,
-  },
-  {
-    id: "odin-2",
-    name: "AYN Odin 2",
-    image: "/images/consoles/odin-2.png",
-    screenSize: '7.0"',
-    cpu: "Snapdragon 8 Gen 2",
-    gpu: "Adreno 740",
-    ram: "8GB",
-    storage: "128GB",
-    system: "Android 13",
-    games: "Switch, PS2, GameCube",
-    speaker: "Stereo",
-    tfCard: "TF Slot",
-    battery: "8000mAh",
-    charger: "USB-C",
-    price: 399,
-  },
-  {
-    id: "rg556",
-    name: "Anbernic RG556",
-    image: "/images/consoles/rg556.webp",
-    screenSize: '5.48" AMOLED',
-    cpu: "Unisoc T820 Octo-Core",
-    gpu: "Mali-G57 MP4",
-    ram: "8GB",
-    storage: "128GB",
-    system: "Android 13",
-    games: "PS2, GameCube, Wii, 3DS, Android",
-    speaker: "Dual Stereo",
-    tfCard: "TF Slot",
-    battery: "5500mAh",
-    charger: "USB-C",
-    price: 613,
-  },
-  {
-    id: "trimui-smart-pro",
-    name: "Trimui Smart Pro",
-    image: "/images/consoles/trimui-smart-pro.webp",
-    screenSize: '4.96"',
-    cpu: "Allwinner A133P",
-    gpu: "PowerVR GE8300",
-    ram: "1GB",
-    storage: "8GB",
-    system: "Linux",
-    games: "PSP, PS1, N64",
-    speaker: "Stereo",
-    tfCard: "TF Slot",
-    battery: "5000mAh",
-    charger: "USB-C",
-    price: 159,
-  },
-  {
-    id: "gkd-pixel-2",
-    name: "GKD Pixel 2",
-    image: "/images/consoles/gkd-pixel-2.png",
-    screenSize: '2.4" Mini',
-    cpu: "RK3326S",
-    gpu: "Mali-400",
-    ram: "1GB",
-    storage: "16GB",
-    system: "Linux",
-    games: "GB, GBC",
-    speaker: "Mono",
-    tfCard: "Up to 128GB",
-    battery: "1800mAh",
-    charger: "USB-C",
-    price: 89,
-  },
-];
+import ChatPanel from "./ChatPanel";
+import CollectionActions from "./CollectionActions";
+import { useMyCollection } from "../lib/myCollection";
+import {
+  fetchAiBuilderPicks,
+  fetchConsoles,
+  type AiBuilderResult,
+  type ConsoleItem,
+} from "../lib/api";
  
 type FilterKey =
   | "screenSize"
@@ -254,10 +70,10 @@ const EMPTY_FILTERS: Record<FilterKey, string[]> = {
  
 /* ---------- AI Builder ---------- */
 /*
- * The AI Builder only collects the user's answers below — it never filters,
- * scores, or reorders anything in the collection grid. On the last question,
- * the finished answers are stored in `aiSubmittedAnswers` (see component
- * state) so a backend call can pick them up and do the actual matching.
+ * The AI Builder collects the user's answers below and sends them to the
+ * backend (POST /api/ai-builder), which finds matching consoles and has Gemini
+ * rank them and explain each pick. The picks show in a panel under the
+ * AI Builder card; the grid and its filters are left as they are.
  */
  
 type AiKey = "price" | "screen" | "os" | "battery";
@@ -334,9 +150,25 @@ const AI_QUESTIONS: AiQuestion[] = [
 ];
  
 export default function CollectionPage() {
+  const [consoles, setConsoles] = useState<ConsoleItem[]>([]);
+  const [loadState, setLoadState] = useState<"loading" | "ready" | "error">("loading");
+
+  useEffect(() => {
+    fetchConsoles()
+      .then((items) => {
+        setConsoles(items);
+        setLoadState("ready");
+      })
+      .catch((err) => {
+        console.error("Couldn't load consoles from the backend:", err);
+        setLoadState("error");
+      });
+  }, []);
+
   const [filters, setFilters] = useState<Record<FilterKey, string[]>>(EMPTY_FILTERS);
  
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  const myCollection = useMyCollection();
   const [activeFilterTab, setActiveFilterTab] = useState<FilterKey>(FILTER_FIELDS[0].key);
  
   const [aiModalOpen, setAiModalOpen] = useState(false);
@@ -351,6 +183,11 @@ export default function CollectionPage() {
   const [aiSubmittedAnswers, setAiSubmittedAnswers] = useState<AiAnswers | null>(null);
   const [aiSubmittedAnswersString, setAiSubmittedAnswersString] = useState<string | null>(null);
   const [showAiBanner, setShowAiBanner] = useState(false);
+  const [aiResult, setAiResult] = useState<AiBuilderResult | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
+  // When set, the grid shows only the AI Builder's matches, in its ranked order
+  const [aiMatchIds, setAiMatchIds] = useState<string[] | null>(null);
  
   const options = useMemo(() => {
     const result = {} as Record<FilterKey, string[]>;
@@ -367,7 +204,7 @@ export default function CollectionPage() {
       }
     }
     return result;
-  }, []);
+  }, [consoles]);
  
   const toggleFilterOption = (key: FilterKey, value: string) =>
     setFilters((prev) => {
@@ -390,16 +227,20 @@ export default function CollectionPage() {
         return selected.includes(c[key]);
       })
     );
-  }, [filters]);
+  }, [filters, consoles]);
  
   const resetFilters = () => setFilters(EMPTY_FILTERS);
  
   const activeCount = Object.values(filters).reduce((sum, arr) => sum + arr.length, 0);
   const selected = consoles.find((c) => c.id === selectedId) ?? null;
  
-  // The grid always reflects the dropdown/checklist filters only. The AI
-  // Builder never touches this.
-  const displayList = filtered;
+  // The grid shows the checklist filters' results. After "Show all matches" in the AI Builder panel, it shows
+  // only the AI Builder's matches (still narrowed by any ticked filters), best first.
+  const displayList = useMemo(() => {
+    if (!aiMatchIds) return filtered;
+    const order = new Map(aiMatchIds.map((id, i) => [id, i]));
+    return filtered.filter((c) => order.has(c.id)).sort((a, b) => order.get(a.id)! - order.get(b.id)!);
+  }, [filtered, aiMatchIds]);
  
   // ---------- AI Builder: step-by-step flow ----------
   const currentQuestion = AI_QUESTIONS[aiStep];
@@ -426,22 +267,26 @@ export default function CollectionPage() {
     }
   };
  
-  const handleAiSubmit = () => {
-    // Just store the answers — no scoring, filtering, or grid changes here.
+  const handleAiSubmit = async () => {
     const answersString = JSON.stringify(aiAnswers);
- 
+
     setAiSubmittedAnswers(aiAnswers);
     setAiSubmittedAnswersString(answersString);
     setShowAiBanner(true);
     setAiModalOpen(false);
- 
-    // TODO: hand this string off to the backend, e.g.:
-    // fetch("/api/ai-builder", {
-    //   method: "POST",
-    //   headers: { "Content-Type": "application/json" },
-    //   body: answersString,
-    // });
-    console.log("AI Builder answers ready for backend:", answersString);
+
+    setAiLoading(true);
+    setAiError(null);
+    setAiResult(null);
+    setAiMatchIds(null);
+    try {
+      setAiResult(await fetchAiBuilderPicks(aiAnswers));
+    } catch (err) {
+      console.error("AI Builder request failed:", err);
+      setAiError("Couldn't reach the AI Builder. Is the backend running?");
+    } finally {
+      setAiLoading(false);
+    }
   };
  
   return (
@@ -452,6 +297,10 @@ export default function CollectionPage() {
         <header className={styles.header}>
           <Link href="/" className={styles.backLink}>
             &larr; Back
+          </Link>
+          <Link href="/my-collection" className={styles.myCollectionLink}>
+            My collection ({myCollection.items.length})
+            {myCollection.watchlist.length > 0 && ` · tracking ${myCollection.watchlist.length}`}
           </Link>
           <h1 className={styles.title}>Browse consoles</h1>
           <p className={styles.subtitle}>
@@ -526,8 +375,81 @@ export default function CollectionPage() {
           </div>
         </div>
  
+        {showAiBanner && (
+          <section className={styles.aiResults} aria-live="polite">
+            <div className={styles.aiResultsHeader}>
+              <p className={styles.aiBuilderTitle}>
+                <span className={styles.aiBuilderSpark} aria-hidden="true">✦</span> Your AI Builder picks
+              </p>
+              <button type="button" className={styles.resetButton} onClick={() => setShowAiBanner(false)}>
+                Hide
+              </button>
+            </div>
+
+            {aiLoading && <p className={styles.aiResultsNote}>Finding your matches…</p>}
+            {aiError && <p className={styles.aiResultsNote}>{aiError}</p>}
+
+            {aiResult && (
+              <>
+                {aiResult.summary && <p className={styles.aiResultsSummary}>{aiResult.summary}</p>}
+                {aiResult.picks.length === 0 ? (
+                  <p className={styles.aiResultsNote}>No consoles match those answers.</p>
+                ) : (
+                  <ol className={styles.aiPickList}>
+                    {aiResult.picks.map((pick) => (
+                      <li key={pick.device.id}>
+                        <button
+                          type="button"
+                          className={styles.aiPick}
+                          onClick={() => setSelectedId(pick.device.slug)}
+                        >
+                          <span className={styles.aiPickName}>
+                            {pick.rank}. {pick.device.name}
+                            {pick.device.startingPriceUsd !== null && (
+                              <span className={styles.aiPickPrice}> · ${pick.device.startingPriceUsd}</span>
+                            )}
+                          </span>
+                          <span className={styles.aiPickReason}>{pick.reason}</span>
+                        </button>
+                      </li>
+                    ))}
+                  </ol>
+                )}
+                <div className={styles.aiResultsFooter}>
+                  <p className={styles.aiResultsNote}>
+                    {aiResult.matchCount} console{aiResult.matchCount === 1 ? "" : "s"} matched
+                    {aiResult.rankedBy === "gemini" ? " · ranked by Gemini" : " · ranked by specs (Gemini unavailable)"}
+                  </p>
+                  {aiResult.matchCount > 0 &&
+                    (aiMatchIds ? (
+                      <button type="button" className={styles.resetButton} onClick={() => setAiMatchIds(null)}>
+                        Show all consoles
+                      </button>
+                    ) : (
+                      <button
+                        type="button"
+                        className={styles.aiShowAllButton}
+                        onClick={() => setAiMatchIds(aiResult.matches.map((d) => d.slug))}
+                      >
+                        Show all {aiResult.matchCount} matches in the grid
+                      </button>
+                    ))}
+                </div>
+              </>
+            )}
+          </section>
+        )}
+
         <div className={styles.browseRow}>
           <div className={styles.gridPanel}>
+            {aiMatchIds && (
+              <p className={styles.aiGridNotice}>
+                Showing {displayList.length} AI Builder match{displayList.length === 1 ? "" : "es"}, best first.{" "}
+                <button type="button" className={styles.aiLinkButton} onClick={() => setAiMatchIds(null)}>
+                  Show all consoles
+                </button>
+              </p>
+            )}
             <div className={styles.grid}>
               {displayList.map((c) => (
                 <button
@@ -551,7 +473,14 @@ export default function CollectionPage() {
                 </button>
               ))}
  
-              {displayList.length === 0 && (
+              {loadState === "loading" && <p className={styles.empty}>Loading consoles…</p>}
+              {loadState === "error" && (
+                <p className={styles.empty}>
+                  Couldn&rsquo;t load consoles. Make sure the backend is running.
+                </p>
+              )}
+
+              {loadState === "ready" && displayList.length === 0 && (
                 <p className={styles.empty}>
                   No consoles match these filters. Try resetting one or two.
                 </p>
@@ -580,7 +509,10 @@ export default function CollectionPage() {
                   />
                 )}
                 <h2 className={styles.detailName}>{selected.name}</h2>
-                <p className={styles.detailPrice}>${selected.price}</p>
+                <p className={styles.detailPrice}>
+                  {selected.price !== null ? `$${selected.price}` : "No price yet"}
+                </p>
+                <CollectionActions slug={selected.id} name={selected.name} />
                 <dl className={styles.specList}>
                   {SPEC_ROWS.map(({ key, label }) => (
                     <div className={styles.specRow} key={key}>
@@ -698,6 +630,8 @@ export default function CollectionPage() {
           </div>
         </div>
       )}
+
+      <ChatPanel onSelectConsole={setSelectedId} />
     </div>
   );
 }

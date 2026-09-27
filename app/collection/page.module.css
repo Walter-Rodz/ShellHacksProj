@@ -721,3 +721,127 @@
     align-items: flex-start;
   }
 }
+/* ---------- AI Builder results (connected to the backend) ---------- */
+.aiResults {
+  margin: 16px 0;
+  padding: 16px 20px;
+  border-radius: 16px;
+  border: 1px solid rgba(185, 21, 204, 0.4);
+  background: rgba(33, 4, 86, 0.55);
+}
+
+.aiResultsHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.aiResultsSummary {
+  margin: 8px 0 12px;
+  line-height: 1.5;
+}
+
+.aiResultsNote {
+  margin: 8px 0 0;
+  font-size: 0.85rem;
+  opacity: 0.75;
+}
+
+.aiPickList {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.aiPick {
+  display: grid;
+  gap: 4px;
+  width: 100%;
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  color: inherit;
+  font: inherit;
+  text-align: left;
+  cursor: pointer;
+}
+
+.aiPick:hover {
+  border-color: rgba(185, 21, 204, 0.8);
+}
+
+.aiPickName {
+  font-weight: 600;
+}
+
+.aiPickPrice {
+  font-weight: 400;
+  opacity: 0.8;
+}
+
+.aiPickReason {
+  font-size: 0.9rem;
+  line-height: 1.45;
+  opacity: 0.85;
+}
+
+.aiResultsFooter {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 12px;
+  margin-top: 8px;
+}
+
+.aiShowAllButton {
+  padding: 8px 14px;
+  border: 1px solid rgba(185, 21, 204, 0.8);
+  border-radius: 999px;
+  background: rgba(185, 21, 204, 0.25);
+  color: inherit;
+  font: inherit;
+  font-size: 0.9rem;
+  cursor: pointer;
+}
+
+.aiShowAllButton:hover {
+  background: rgba(185, 21, 204, 0.4);
+}
+
+.aiGridNotice {
+  margin: 0 0 12px;
+  font-size: 0.9rem;
+  opacity: 0.9;
+}
+
+.aiLinkButton {
+  padding: 0;
+  border: none;
+  background: none;
+  color: inherit;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- Link to My collection (header) ---------- */
+.myCollectionLink {
+  justify-self: end;
+  float: right;
+  padding: 0.45rem 0.9rem;
+  border: 1px solid var(--pink);
+  border-radius: 999px;
+  color: var(--pink);
+  font-size: 0.85rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.myCollectionLink:hover {
+  background: rgba(255, 213, 0, 0.1);
+}
