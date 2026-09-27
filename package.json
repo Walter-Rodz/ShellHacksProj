@@ -25,5 +25,7 @@
   },
   "allowScripts": {
     "unrs-resolver@1.12.2": true
+  "dependencies": {
+    "dotenv": "^18.0.4"
   }
 }
